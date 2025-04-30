@@ -1,0 +1,33 @@
+                        HOSTEL Management System
+
+Member 1:
+Responsibilities:
+
+Student Management (add/search/delete student)
+
+Room Allocation System
+SQL Tables Owned: students, rooms
+Data Structures Used: Hash Table, Min Heap
+
+Member 2:
+Responsibilities:
+
+Mess Attendance Management
+
+Visitor Management (entry/exit)
+SQL Tables Owned: mess_log, visitors
+Data Structures Used: Queue, Linked List
+
+Member 3:
+Responsibilities:
+
+Fee Management (record/add/view dues)
+
+Final Integration & Error Handling
+SQL Tables Owned: fees
+Data Structures Used: Binary Search Tree (BST)
+
+Task:
+Before 1st value we have to ready the structure of our project you have to select your role 
+and replace your name with member no
+Note: Member 3 have initially only 1 Responsibility remaing task assign late 
