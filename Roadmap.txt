@@ -18,7 +18,7 @@ Visitor Management (entry/exit)
 SQL Tables Owned: mess_log, visitors
 Data Structures Used: Queue, Linked List
 
-Member 3:
+Member 3 Alishba Asif:
 Responsibilities:
 
 Fee Management (record/add/view dues)
@@ -31,5 +31,3 @@ Task:
 Before 1st value we have to ready the structure of our project you have to select your role 
 and replace your name with member no
 Note: Member 3 have initially only 1 Responsibility remaing task assign late 
-
-TAIME LGAYGA TAIME
