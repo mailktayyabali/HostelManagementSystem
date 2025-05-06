@@ -1,29 +1,33 @@
                         HOSTEL Management System
 
-Member 1:
+Member 1 Tayyab Ali:
 Responsibilities:
+Classes you have to make:
+Student Management& Room Allocation System
+Functions for Classes:
+Add(), insert(), delete(), update(), Search(),view()
 
-Student Management (add/search/delete student)
-
-Room Allocation System
 SQL Tables Owned: students, rooms
 Data Structures Used: Hash Table, Min Heap
 
-Member 2:
+Member2 Hashim Ahmed \:
 Responsibilities:
-
-Mess Attendance Management
-
-Visitor Management (entry/exit)
-SQL Tables Owned: mess_log, visitors
-Data Structures Used: Queue, Linked List
+Classes you have to make:
+Mess Attendance Management & Visitor Management 
+Functions for Classes:
+Add(), insert(), delete(), update(), Search(),view()
+SQL Tables Owned:
+ mess_log, visitors
+Data Structures Used:
+ Queue(use in Attendance Management), Linked List (use in visitor Management)
 
 Member 3 Alishba Asif:
 Responsibilities:
+Classes you have to make : 
+Fee Management
+Functions for Classes:
+Add(), insert(), delete(), update(), Search(),view()
 
-Fee Management (record/add/view dues)
-
-Final Integration & Error Handling
 SQL Tables Owned: fees
 Data Structures Used: Binary Search Tree (BST)
 
