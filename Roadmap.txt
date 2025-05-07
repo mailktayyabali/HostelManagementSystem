@@ -15,7 +15,7 @@ Responsibilities:
 Classes you have to make:
 Mess Attendance Management & Visitor Management 
 Functions for Classes:
-Add(), insert(), delete(), update(), Search(),view()
+Add(), delete(), update(), Search(),view()
 SQL Tables Owned:
  mess_log, visitors
 Data Structures Used:
@@ -26,7 +26,7 @@ Responsibilities:
 Classes you have to make : 
 Fee Management
 Functions for Classes:
-Add(), insert(), delete(), update(), Search(),view()
+Add(), delete(), update(), Search(),view()
 
 SQL Tables Owned: fees
 Data Structures Used: Binary Search Tree (BST)
