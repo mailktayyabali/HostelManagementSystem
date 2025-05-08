@@ -105,8 +105,7 @@ int main()
 
     MessAttendance m1;
     m1.Entryatend(1 , "Hashim" , 10);
-    m1.Entryatend(2 , "zia" , 10);
-    m1.Entryatend(3,"Taimoor" , 11);
+    m1.Entryatend(2 , "Tayyab" , 10);
     m1.Display();
     return 0;
 }
