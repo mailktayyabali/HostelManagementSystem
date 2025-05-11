@@ -7,18 +7,34 @@ class FeeRecord {
 public:
     int studentID;
     string studentName;
-    float feeAmount;
+    int totalFee;
+    int feePaid;
+    string feeDue;
+    int securityFee;
+    vector<string> paymentDates;
 
-    FeeRecord(int id, string name, float fee) {
+    FeeRecord(int id, string name, int total, int paid, int security, string date) {
         studentID = id;
         studentName = name;
-        feeAmount = fee;
+        totalFee = total;
+        feePaid = paid;
+        securityFee = security;
+        feeDue = ((totalFee - feePaid) > 0) ? "Due" : "Cleared";
+        paymentDates.push_back(date);
     }
 
     void displayFeeRecord() {
-        cout << "Student ID: " << studentID << endl;
+        cout << "\nStudent ID: " << studentID << endl;
         cout << "Student Name: " << studentName << endl;
-        cout << "Fee Amount: " << feeAmount << endl;
+        cout << "Total Fee: " << totalFee << endl;
+        cout << "Fee Paid: " << feePaid << endl;
+        cout << "Security Fee: " << securityFee << endl;
+        cout << "Fee Due Status: " << feeDue << endl;
+        cout << "Payment Dates: ";
+        for (const string& date : paymentDates) {
+            cout << date << " ";
+        }
+        cout << endl;
     }
 };
 
@@ -27,8 +43,8 @@ private:
     vector<FeeRecord> records;
 
 public:
-    void Add(int id, string name, float fee) {
-        records.push_back(FeeRecord(id, name, fee));
+    void Add(int id, string name, int totalFee, int paid, int securityFee, string date) {
+        records.push_back(FeeRecord(id, name, totalFee, paid, securityFee, date));
         cout << "Record added successfully.\n";
     }
 
@@ -43,11 +59,12 @@ public:
         cout << "Record not found.\n";
     }
 
-    void Update(int id, float updateFee) {
-        for (auto &rec : records) {
+    void Update(int id, int totalFee) {
+        for (auto& rec : records) {
             if (rec.studentID == id) {
-                rec.feeAmount = updateFee;
-                cout << "Fee updated successfully.\n";
+                rec.totalFee = totalFee;
+                rec.feeDue = ((rec.totalFee - rec.feePaid) > 0) ? "Due" : "Cleared";
+                cout << "Total fee updated.\n";
                 return;
             }
         }
@@ -55,7 +72,7 @@ public:
     }
 
     void Search(int id) {
-        for (auto &rec : records) {
+        for (auto& rec : records) {
             if (rec.studentID == id) {
                 rec.displayFeeRecord();
                 return;
@@ -69,24 +86,50 @@ public:
             cout << "No records found.\n";
             return;
         }
-        for (auto &rec : records) {
+        for (auto& rec : records) {
             rec.displayFeeRecord();
+            cout << "------------------------\n";
         }
+    }
+
+    void addFee(int studentID, int amountPaid, string date) {
+        for (auto& rec : records) {
+            if (rec.studentID == studentID) {
+                rec.feePaid += amountPaid;
+                rec.feeDue = (rec.totalFee - rec.feePaid > 0) ? "Due" : "Cleared";
+                rec.paymentDates.push_back(date);
+                cout << "Payment added.\n";
+                return;
+            }
+        }
+        cout << "Student not found.\n";
+    }
+
+    void checkDue(int studentID) {
+        for (auto& rec : records) {
+            if (rec.studentID == studentID) {
+                cout << "Fee Due Status for Student ID " << studentID << ": " << rec.feeDue << endl;
+                return;
+            }
+        }
+        cout << "Student not found.\n";
+    }
+
+    void updatePayment(int studentID, int newAmount, string date) {
+        for (auto& rec : records) {
+            if (rec.studentID == studentID) {
+                rec.feePaid = newAmount;
+                rec.feeDue = (rec.totalFee - rec.feePaid > 0) ? "Due" : "Cleared";
+                rec.paymentDates.push_back(date);
+                cout << "Fee payment updated.\n";
+                return;
+            }
+        }
+        cout << "Student not found.\n";
+    }
+
+    void displayAllFeeRecords() {
+        View();
     }
 };
 
-int main() {
-    FeeManagement manager;
-
-    manager.Add(1, "Ali", 12000);
-    manager.Add(2, "Fatima", 13500);
-    manager.View();
-
-    manager.Update(1, 12500);
-    manager.Search(1);
-
-    manager.Delete(2);
-    manager.View();
-
-    return 0;
-}

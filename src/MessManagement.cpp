@@ -10,7 +10,6 @@ public:
     int date;
     node *next;
 
-
     node(int id, string n, int d)
     {
         studentId = id;
@@ -81,8 +80,6 @@ public:
     
     void Delete(int id){
      
-        
-
 
     }
 
