@@ -6,16 +6,14 @@ using namespace std;
 class FeeRecord {
 public:
     int studentID;
-    string studentName;
     int totalFee;
     int feePaid;
     string feeDue;
     int securityFee;
     vector<string> paymentDates;
 
-    FeeRecord(int id, string name, int total, int paid, int security, string date) {
+    FeeRecord(int id, int total, int paid, int security, string date) {
         studentID = id;
-        studentName = name;
         totalFee = total;
         feePaid = paid;
         securityFee = security;
@@ -25,7 +23,6 @@ public:
 
     void displayFeeRecord() {
         cout << "\nStudent ID: " << studentID << endl;
-        cout << "Student Name: " << studentName << endl;
         cout << "Total Fee: " << totalFee << endl;
         cout << "Fee Paid: " << feePaid << endl;
         cout << "Security Fee: " << securityFee << endl;
@@ -43,8 +40,8 @@ private:
     vector<FeeRecord> records;
 
 public:
-    void Add(int id, string name, int totalFee, int paid, int securityFee, string date) {
-        records.push_back(FeeRecord(id, name, totalFee, paid, securityFee, date));
+    void Add(int id, int totalFee, int paid, int securityFee, string date) {
+        records.push_back(FeeRecord(id, totalFee, paid, securityFee, date));
         cout << "Record added successfully.\n";
     }
 

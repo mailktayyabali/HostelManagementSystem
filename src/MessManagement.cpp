@@ -101,8 +101,8 @@ int main()
 {
 
     MessAttendance m1;
-    m1.Entryatend(1 , "Hashim" , 10);
-    m1.Entryatend(2 , "Tayyab" , 10);
+    m1.Add(1 , "Hashim" , 10);
+    m1.Add(2 , "Tayyab" , 10);
     m1.Display();
     return 0;
 }

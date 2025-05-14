@@ -117,8 +117,6 @@ int main() {
                                 break;
                             }
                             cin.ignore();
-                            cout << "Enter Name: ";
-                            getline(cin, name);
                             cout << "Enter Total Fee: ";
                             cin >> total;
                             cout << "Enter Fee Paid: ";
@@ -128,7 +126,7 @@ int main() {
                             cin.ignore();
                             cout << "Enter Payment Date: ";
                             getline(cin, date);
-                            fm.Add(id, name, total, paid, security, date);
+                            fm.Add(id, total, paid, security, date);
                             break;
                         }
                         case 2: {

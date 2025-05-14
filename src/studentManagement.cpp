@@ -2,10 +2,11 @@
 #include <vector>
 using namespace std;
 
-struct Student {
+class Student {
+public:
     int studentId;
     string studentName;
-    float CNIC;
+    double CNIC;
     string studentAddress;
     string studentPhone;
 };
