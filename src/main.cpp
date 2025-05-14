@@ -93,10 +93,8 @@ do {
                 cout << "3. Update Total Fee" << endl;
                 cout << "4. Search Fee Record" << endl;
                 cout << "5. View All Fee Records" << endl;
-                cout << "6. Add Fee Payment" << endl;
-                cout << "7. Check Fee Due" << endl;
-                cout << "8. Update Fee Paid" << endl;
-                cout << "9. Back to Main Menu" << endl;
+                cout << "6. Check Fee Due" << endl;
+                cout << "7. Back to Main Menu" << endl;
                 cout << "\nEnter your choice: ";
                 cin >> fChoice;
 
@@ -148,44 +146,18 @@ do {
                         fm.displayAllFeeRecords();
                         break;
                     case 6: {
-                        int id, amount;
-                        string date;
-                        cout << "Enter Student ID to add payment: ";
-                        cin >> id;
-                        cout << "Enter Amount Paid: ";
-                        cin >> amount;
-                        cin.ignore();
-                        cout << "Enter Payment Date: ";
-                        getline(cin, date);
-                        fm.addFee(id, amount, date);
-                        break;
-                    }
-                    case 7: {
                         int id;
                         cout << "Enter Student ID to check due: ";
                         cin >> id;
                         fm.checkDue(id);
                         break;
                     }
-                    case 8: {
-                        int id, amount;
-                        string date;
-                        cout << "Enter Student ID to update fee paid: ";
-                        cin >> id;
-                        cout << "Enter New Amount Paid: ";
-                        cin >> amount;
-                        cin.ignore();
-                        cout << "Enter Payment Date: ";
-                        getline(cin, date);
-                        fm.updatePayment(id, amount, date);
-                        break;
-                    }
-                    case 9:
+                    case 7:
                         break;
                     default:
                         cout << "Invalid choice!\n";
                 }
-            } while (fChoice != 9);
+            } while (fChoice != 7);
             break;
         }
 

@@ -92,36 +92,10 @@ public:
         }
     }
 
-    void addFee(int studentID, int amountPaid, string date) {
-        for (auto& rec : records) {
-            if (rec.studentID == studentID) {
-                rec.feePaid += amountPaid;
-                rec.feeDue = (rec.totalFee - rec.feePaid > 0) ? "Due" : "Cleared";
-                rec.paymentDates.push_back(date);
-                cout << "Payment added.\n";
-                return;
-            }
-        }
-        cout << "Student not found.\n";
-    }
-
     void checkDue(int studentID) {
         for (auto& rec : records) {
             if (rec.studentID == studentID) {
                 cout << "Fee Due Status for Student ID " << studentID << ": " << rec.feeDue << endl;
-                return;
-            }
-        }
-        cout << "Student not found.\n";
-    }
-
-    void updatePayment(int studentID, int newAmount, string date) {
-        for (auto& rec : records) {
-            if (rec.studentID == studentID) {
-                rec.feePaid = newAmount;
-                rec.feeDue = (rec.totalFee - rec.feePaid > 0) ? "Due" : "Cleared";
-                rec.paymentDates.push_back(date);
-                cout << "Fee payment updated.\n";
                 return;
             }
         }
