@@ -10,7 +10,7 @@ Add(), insert(), delete(), update(), Search(),view()
 SQL Tables Owned: students, rooms
 Data Structures Used: Hash Table, Min Heap
 
-Member2 Hashim Ahmed \:
+Member2 Hashim Ahmed:
 Responsibilities:
 Classes you have to make:
 Mess Attendance Management & Visitor Management 
