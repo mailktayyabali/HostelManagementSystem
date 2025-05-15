@@ -1,3 +1,6 @@
+//This is a C++ program that implements a simple fee management system for students.
+// It allows adding, deleting, updating, searching, and viewing fee records.
+// It also checks if the fee is due or cleared and displays payment dates.
 #include <iostream>
 #include <vector>
 #include <string>
