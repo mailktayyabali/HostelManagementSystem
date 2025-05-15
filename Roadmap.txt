@@ -10,7 +10,7 @@ Add(), insert(), delete(), update(), Search(),view()
 SQL Tables Owned: students, rooms
 Data Structures Used: Hash Table, Min Heap
 
-Member2 Hashim Ahmed \:
+Member2 Hashim Ahmed:
 Responsibilities:
 Classes you have to make:
 Mess Attendance Management & Visitor Management 
@@ -25,26 +25,16 @@ Member 3 Alishba Asif:
 Responsibilities:
 1. Fee Records
 Each student may have:
-
 int Total fee
-
 int Fee paid
-
 String Fee due
-
 int securityFee
-
 string Payment dates
-
 2. Operations
 The class would provide:
-
 addFee(int studentID, int amountPaid)
-
 checkDue(int studentID)
-
 updatePayment(int studentID, int newAmount)
-
 Possibly displayAllFeeRecords()
 SQL Tables Owned: fees
 Data Structures Used: Binary Search Tree (BST)

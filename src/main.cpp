@@ -1,91 +1,97 @@
-#include <iostream> 
+#include <iostream>
 #include "studentManagement.cpp"
-#include "FeeManagement.cpp" 
+#include "FeeManagement.cpp"
+
 using namespace std;
 
 int main() {
-studentManagement sm;
-FeeManagement fm;
-int choice;
-do {
-    cout << "\n===== Main Menu =====" << endl;
-    cout << "1. Student Management" << endl;
-    cout << "2. Fee Management" << endl;
-    cout << "3. Exit" << endl;
-    cout << "Enter your choice: ";
-    cin >> choice;
+    studentManagement sm;
+    FeeManagement fm;
+    int choice;
 
-    switch (choice) {
-        case 1: {
-            int sChoice;
-            do {
-                cout << "\n-- Student Management --" << endl;
-                cout << "1. Add Student" << endl;
-                cout << "2. Delete Student" << endl;
-                cout << "3. Update Student" << endl;
-                cout << "4. View Students" << endl;
-                cout << "5. Back to Main Menu" << endl;
-                cout << "\nEnter your choice: ";
-                cin >> sChoice;
+    do {
+        cout << "\n===== Main Menu =====" << endl;
+        cout << "1. Student Management" << endl;
+        cout << "2. Fee Management" << endl;
+        cout << "3. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
 
-                switch (sChoice) {
-                    case 1: {
-                        Student* newStudent = new Student;
-                        cout << "Enter Student ID: ";
-                        cin >> newStudent->studentId;
-                        cout << "Enter Student Name: ";
-                        cin.ignore();
-                        getline(cin, newStudent->studentName);
-                        cout << "Enter CNIC: ";
-                        cin >> newStudent->CNIC;
-                        cout << "Enter Address: ";
-                        cin.ignore();
-                        getline(cin, newStudent->studentAddress);
-                        cout << "Enter Phone: ";
-                        cin >> newStudent->studentPhone;
-                        sm.addStudent(newStudent);
-                        break;
+        switch (choice) {
+            case 1: {
+                int sChoice;
+                do {
+                    cout << "\n-- Student Management --" << endl;
+                    cout << "1. Add Student" << endl;
+                    cout << "2. Delete Student" << endl;
+                    cout << "3. Update Student" << endl;
+                    cout << "4. View Students" << endl;
+                    cout << "5. Back to Main Menu" << endl;
+                    cout << "Enter your choice: ";
+                    cin >> sChoice;
+
+                    switch (sChoice) {
+                        case 1: {
+                            Student* newStudent = new Student;
+                            cout << "Enter Student ID: ";
+                            cin >> newStudent->studentId;
+                            cin.ignore(); // Corrected position
+                            cout << "Enter Student Name: ";
+                            getline(cin, newStudent->studentName);
+                            cout << "Enter CNIC: ";
+                            cin >> newStudent->CNIC;
+                            cin.ignore();
+                            cout << "Enter Address: ";
+                            getline(cin, newStudent->studentAddress);
+                            cout << "Enter Phone: ";
+                            cin >> newStudent->studentPhone;
+                            sm.addStudent(newStudent);
+                            break;
+                        }
+                        case 2: {
+                            int studentId;
+                            cout << "Enter Student ID to delete: ";
+                            cin >> studentId;
+                            sm.deleteStudent(studentId);
+                            break;
+                        }
+                        case 3: {
+                            int studentId;
+                            cout << "Enter Student ID to update: ";
+                            cin >> studentId;
+                            if (!sm.exists(studentId)) {
+                                cout << "Student not found!" << endl;
+                                break;
+                            }
+                            Student* updatedStudent = new Student;
+                            cin.ignore(); // Corrected position
+                            cout << "Enter Updated Student Name: ";
+                            getline(cin, updatedStudent->studentName);
+                            cout << "Enter Updated CNIC: ";
+                            cin >> updatedStudent->CNIC;
+                            cin.ignore();
+                            cout << "Enter Updated Address: ";
+                            getline(cin, updatedStudent->studentAddress);
+                            cout << "Enter Updated Phone: ";
+                            cin >> updatedStudent->studentPhone;
+                            sm.updateStudent(studentId, updatedStudent);
+                            delete updatedStudent;
+                            break;
+                        }
+                        case 4:
+                            sm.viewStudents();
+                            break;
+                        case 5:
+                            break;
+                        default:
+                            cout << "Invalid choice!\n";
                     }
-                    case 2: {
-                        int studentId;
-                        cout << "Enter Student ID to delete: ";
-                        cin >> studentId;
-                        sm.deleteStudent(studentId);
-                        break;
-                    }
-                    case 3: {
-                        int studentId;
-                        cout << "Enter Student ID to update: ";
-                        cin >> studentId;
-                        Student* updatedStudent = new Student;
-                        cout << "Enter Updated Student Name: ";
-                        cin.ignore();
-                        getline(cin, updatedStudent->studentName);
-                        cout << "Enter Updated CNIC: ";
-                        cin >> updatedStudent->CNIC;
-                        cout << "Enter Updated Address: ";
-                        cin.ignore();
-                        getline(cin, updatedStudent->studentAddress);
-                        cout << "Enter Updated Phone: ";
-                        cin >> updatedStudent->studentPhone;
-                        sm.updateStudent(studentId, updatedStudent);
-                        delete updatedStudent;
-                        break;
-                    }
-                    case 4:
-                        sm.viewStudents();
-                        break;
-                    case 5:
-                        break;
-                    default:
-                        cout << "Invalid choice!\n";
-                }
-            } while (sChoice != 5);
-            break;
-        }
+                } while (sChoice != 5);
+                break;
+            }
 
         case 2: {
-            int fChoice;
+             int fChoice;
             do {
                 cout << "\n-- Fee Management --" << endl;
                 cout << "1. Add Fee Record" << endl;
@@ -168,10 +174,8 @@ do {
         default:
             cout << "Invalid choice! Please try again.\n";
     }
+    
+    } while (choice != 3);
 
-} while (choice != 3);
-
-return 0;
-
-
+    return 0;
 }
