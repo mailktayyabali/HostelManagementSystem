@@ -1,4 +1,5 @@
 #include <iostream>
+#include<cstdlib>
 #include "studentManagement.cpp"
 #include "FeeManagement.cpp"
 
@@ -16,6 +17,7 @@ int main() {
         cout << "3. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
+        system("cls"); // Clear the console screen
 
         switch (choice) {
             case 1: {
@@ -38,9 +40,13 @@ int main() {
                             cin.ignore(); // Corrected position
                             cout << "Enter Student Name: ";
                             getline(cin, newStudent->studentName);
-                            cout << "Enter CNIC: ";
-                            cin >> newStudent->CNIC;
-                            cin.ignore();
+                            // CNIC input with validation
+                            while (true) {
+                                cout << "Enter CNIC: ";
+                                getline(cin, newStudent->CNIC);
+                                if (isValidCNIC(newStudent->CNIC)) break;
+                                cout << "Invalid CNIC! Only numbers and dashes are allowed. Please re-enter.\n";
+                            }
                             cout << "Enter Address: ";
                             getline(cin, newStudent->studentAddress);
                             cout << "Enter Phone: ";
@@ -67,9 +73,13 @@ int main() {
                             cin.ignore(); // Corrected position
                             cout << "Enter Updated Student Name: ";
                             getline(cin, updatedStudent->studentName);
-                            cout << "Enter Updated CNIC: ";
-                            cin >> updatedStudent->CNIC;
-                            cin.ignore();
+                            // CNIC input with validation for update
+                            while (true) {
+                                cout << "Enter Updated CNIC: ";
+                                getline(cin, updatedStudent->CNIC);
+                                if (isValidCNIC(updatedStudent->CNIC)) break;
+                                cout << "Invalid CNIC! Only numbers and dashes are allowed. Please re-enter.\n";
+                            }
                             cout << "Enter Updated Address: ";
                             getline(cin, updatedStudent->studentAddress);
                             cout << "Enter Updated Phone: ";
