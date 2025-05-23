@@ -250,7 +250,7 @@ int main() {
                             int id;
                             cout << "Enter Student ID to delete attendance: ";
                             cin >> id;
-                            mam.Dequeue(id);
+                            mam.Dequeue();
                             break;
                         }
                         case 3:
