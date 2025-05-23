@@ -1,32 +1,8 @@
-#include <iostream>
-#include <vector>
-#include<cstdlib>
-#include <unordered_map>
-#include <unistd.h>
-using namespace std;
+#include "StudentManagement.h"
+#include <unistd.h>   // for sleep
+#include <cstdlib>    // for system("cls")
 
-class Student {
-public:
-    int studentId;
-    string studentName;
-    string CNIC; // Changed from double to string
-    string studentAddress;
-    string studentPhone;
-};
-
-class studentManagement {
-public:
-    void addStudent(Student* student);
-    void deleteStudent(int studentId);
-    void updateStudent(int studentId, Student* updatedStudent);
-    void viewStudents();
-    bool exists(int studentId) const;
-
-private:
-    unordered_map<int, Student*> students; // Hash table for fast lookup by studentId
-};
-
-// Helper function to validate CNIC
+// Validate CNIC format
 bool isValidCNIC(const string& cnic) {
     for (char c : cnic) {
         if (!isdigit(c) && c != '-') {
@@ -36,7 +12,8 @@ bool isValidCNIC(const string& cnic) {
     return !cnic.empty();
 }
 
-void studentManagement::addStudent(Student* student) {
+// Add new student
+void StudentManagement::addStudent(Student* student) {
     if (students.find(student->studentId) != students.end()) {
         cout << "Student already exists!" << endl;
         return;
@@ -44,10 +21,11 @@ void studentManagement::addStudent(Student* student) {
     students[student->studentId] = student;
     cout << "Student added successfully!" << endl;
     sleep(2);
-    system("cls");
+    system("cls"); // For Linux use: system("clear");
 }
 
-void studentManagement::deleteStudent(int studentId) {
+// Delete student
+void StudentManagement::deleteStudent(int studentId) {
     auto it = students.find(studentId);
     if (it != students.end()) {
         delete it->second;
@@ -58,7 +36,8 @@ void studentManagement::deleteStudent(int studentId) {
     }
 }
 
-void studentManagement::updateStudent(int studentId, Student* updatedStudent) {
+// Update student details
+void StudentManagement::updateStudent(int studentId, Student* updatedStudent) {
     auto it = students.find(studentId);
     if (it != students.end()) {
         it->second->studentName = updatedStudent->studentName;
@@ -71,7 +50,13 @@ void studentManagement::updateStudent(int studentId, Student* updatedStudent) {
     }
 }
 
-void studentManagement::viewStudents() {
+// Display all students
+void StudentManagement::viewStudents() {
+    if (students.empty()) {
+        cout << "No student records found!" << endl;
+        return;
+    }
+
     for (const auto& pair : students) {
         const Student* student = pair.second;
         cout << "ID: " << student->studentId << endl;
@@ -83,6 +68,7 @@ void studentManagement::viewStudents() {
     }
 }
 
-bool studentManagement::exists(int studentId) const {
+// Check if student exists
+bool StudentManagement::exists(int studentId) const {
     return students.find(studentId) != students.end();
 }

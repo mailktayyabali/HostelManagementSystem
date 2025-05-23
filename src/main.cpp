@@ -1,191 +1,290 @@
 #include <iostream>
-#include<cstdlib>
-#include "studentManagement.cpp"
-#include "FeeManagement.cpp"
+#include "StudentManagement.h"
+#include "FeeManagement.h"
+#include "MessAttendanceManagement.h"
 
 using namespace std;
 
 int main() {
-    studentManagement sm;
+    StudentManagement sm;
     FeeManagement fm;
-    int choice;
+    MessAttendanceManagement mam;
+    int mainChoice;
 
     do {
-        cout << "\n===== Main Menu =====" << endl;
-        cout << "1. Student Management" << endl;
-        cout << "2. Fee Management" << endl;
-        cout << "3. Exit" << endl;
+        cout << "\n===== Hostel Management System =====\n";
+        cout << "1. Student Management\n";
+        cout << "2. Fee Management\n";
+        cout << "3. Mess Attendance Management\n";
+        cout << "4. Exit\n";
         cout << "Enter your choice: ";
-        cin >> choice;
-        system("cls"); // Clear the console screen
+        cin >> mainChoice;
 
-        switch (choice) {
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid input! Try again.\n";
+            continue;
+        }
+
+        switch (mainChoice) {
             case 1: {
-                int sChoice;
+                int choice;
                 do {
-                    cout << "\n-- Student Management --" << endl;
-                    cout << "1. Add Student" << endl;
-                    cout << "2. Delete Student" << endl;
-                    cout << "3. Update Student" << endl;
-                    cout << "4. View Students" << endl;
-                    cout << "5. Back to Main Menu" << endl;
-                    cout << "Enter your choice: ";
-                    cin >> sChoice;
+                    cout << "\n--- Student Management Menu ---\n";
+                    cout << "1. Add Student\n";
+                    cout << "2. Delete Student\n";
+                    cout << "3. Update Student\n";
+                    cout << "4. View All Students\n";
+                    cout << "5. Back to Main Menu\n";
+                    cout << "Enter choice: ";
+                    cin >> choice;
 
-                    switch (sChoice) {
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                        cout << "Invalid input! Try again.\n";
+                        continue;
+                    }
+
+                    switch (choice) {
                         case 1: {
-                            Student* newStudent = new Student;
-                            cout << "Enter Student ID: ";
+                            Student* newStudent = new Student();
+                            cout << "Enter ID: ";
                             cin >> newStudent->studentId;
-                            cin.ignore(); // Corrected position
-                            cout << "Enter Student Name: ";
+                            cin.ignore();
+
+                            cout << "Enter Name: ";
                             getline(cin, newStudent->studentName);
-                            // CNIC input with validation
-                            while (true) {
-                                cout << "Enter CNIC: ";
-                                getline(cin, newStudent->CNIC);
-                                if (isValidCNIC(newStudent->CNIC)) break;
-                                cout << "Invalid CNIC! Only numbers and dashes are allowed. Please re-enter.\n";
+
+                            cout << "Enter CNIC (e.g., 12345-1234567-1): ";
+                            getline(cin, newStudent->CNIC);
+                            if (!isValidCNIC(newStudent->CNIC)) {
+                                cout << "Invalid CNIC format!\n";
+                                delete newStudent;
+                                break;
                             }
+
                             cout << "Enter Address: ";
                             getline(cin, newStudent->studentAddress);
+
                             cout << "Enter Phone: ";
-                            cin >> newStudent->studentPhone;
+                            getline(cin, newStudent->studentPhone);
+
                             sm.addStudent(newStudent);
                             break;
                         }
+
                         case 2: {
-                            int studentId;
+                            int id;
                             cout << "Enter Student ID to delete: ";
-                            cin >> studentId;
-                            sm.deleteStudent(studentId);
+                            cin >> id;
+                            sm.deleteStudent(id);
                             break;
                         }
+
                         case 3: {
-                            int studentId;
+                            int id;
                             cout << "Enter Student ID to update: ";
-                            cin >> studentId;
-                            if (!sm.exists(studentId)) {
-                                cout << "Student not found!" << endl;
+                            cin >> id;
+                            cin.ignore();
+
+                            if (!sm.exists(id)) {
+                                cout << "Student not found!\n";
                                 break;
                             }
-                            Student* updatedStudent = new Student;
-                            cin.ignore(); // Corrected position
-                            cout << "Enter Updated Student Name: ";
+
+                            Student* updatedStudent = new Student();
+                            updatedStudent->studentId = id;
+
+                            cout << "Enter New Name: ";
                             getline(cin, updatedStudent->studentName);
-                            // CNIC input with validation for update
-                            while (true) {
-                                cout << "Enter Updated CNIC: ";
-                                getline(cin, updatedStudent->CNIC);
-                                if (isValidCNIC(updatedStudent->CNIC)) break;
-                                cout << "Invalid CNIC! Only numbers and dashes are allowed. Please re-enter.\n";
+
+                            cout << "Enter New CNIC: ";
+                            getline(cin, updatedStudent->CNIC);
+                            if (!isValidCNIC(updatedStudent->CNIC)) {
+                                cout << "Invalid CNIC format!\n";
+                                delete updatedStudent;
+                                break;
                             }
-                            cout << "Enter Updated Address: ";
+
+                            cout << "Enter New Address: ";
                             getline(cin, updatedStudent->studentAddress);
-                            cout << "Enter Updated Phone: ";
-                            cin >> updatedStudent->studentPhone;
-                            sm.updateStudent(studentId, updatedStudent);
+
+                            cout << "Enter New Phone: ";
+                            getline(cin, updatedStudent->studentPhone);
+
+                            sm.updateStudent(id, updatedStudent);
                             delete updatedStudent;
                             break;
                         }
+
                         case 4:
                             sm.viewStudents();
                             break;
+
                         case 5:
+                            cout << "Returning to main menu...\n";
                             break;
+
                         default:
-                            cout << "Invalid choice!\n";
+                            cout << "Invalid option! Please try again.\n";
                     }
-                } while (sChoice != 5);
+
+                } while (choice != 5);
                 break;
             }
 
-        case 2: {
-             int fChoice;
-            do {
-                cout << "\n-- Fee Management --" << endl;
-                cout << "1. Add Fee Record" << endl;
-                cout << "2. Delete Fee Record" << endl;
-                cout << "3. Update Total Fee" << endl;
-                cout << "4. Search Fee Record" << endl;
-                cout << "5. View All Fee Records" << endl;
-                cout << "6. Check Fee Due" << endl;
-                cout << "7. Back to Main Menu" << endl;
-                cout << "\nEnter your choice: ";
-                cin >> fChoice;
+            case 2: {
+                int choice;
+                do {
+                    cout << "\n-- Fee Management Menu --" << endl;
+                    cout << "1. Add Fee Record" << endl;
+                    cout << "2. Delete Fee Record" << endl;
+                    cout << "3. Update Total Fee" << endl;
+                    cout << "4. Search Fee Record" << endl;
+                    cout << "5. View All Fee Records" << endl;
+                    cout << "6. Check Fee Due" << endl;
+                    cout << "7. Back to Main Menu" << endl;
+                    cout << "Enter your choice: ";
+                    cin >> choice;
 
-                switch (fChoice) {
-                    case 1: {
-                        int id, total, paid, security;
-                        string name, date;
-                        cout << "Enter Student ID: ";
-                        cin >> id;
-                        cin.ignore();
-                        cout << "Enter Name: ";
-                        getline(cin, name);
-                        cout << "Enter Total Fee: ";
-                        cin >> total;
-                        cout << "Enter Fee Paid: ";
-                        cin >> paid;
-                        cout << "Enter Security Fee: ";
-                        cin >> security;
-                        cin.ignore();
-                        cout << "Enter Payment Date: ";
-                        getline(cin, date);
-                        fm.Add(id, name, total, paid, security, date);
-                        break;
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                        cout << "Invalid input! Try again.\n";
+                        continue;
                     }
-                    case 2: {
-                        int id;
-                        cout << "Enter Student ID to delete: ";
-                        cin >> id;
-                        fm.Delete(id);
-                        break;
+
+                    switch (choice) {
+                        case 1: {
+                            int id, total, paid, security;
+                            string name, date;
+                            cout << "Enter Student ID: "; cin >> id;
+                            cin.ignore();
+                            cout << "Enter Name: "; getline(cin, name);
+                            cout << "Enter Total Fee: "; cin >> total;
+                            cout << "Enter Fee Paid: "; cin >> paid;
+                            cout << "Enter Security Fee: "; cin >> security;
+                            cin.ignore();
+                            cout << "Enter Payment Date: "; getline(cin, date);
+                            fm.Add(id, name, total, paid, security, date);
+                            break;
+                        }
+                        case 2: {
+                            int id;
+                            cout << "Enter Student ID to delete: ";
+                            cin >> id;
+                            fm.Delete(id);
+                            break;
+                        }
+                        case 3: {
+                            int id, total;
+                            cout << "Enter Student ID to update total fee: ";
+                            cin >> id;
+                            cout << "Enter new Total Fee: ";
+                            cin >> total;
+                            fm.Update(id, total);
+                            break;
+                        }
+                        case 4: {
+                            int id;
+                            cout << "Enter Student ID to search: ";
+                            cin >> id;
+                            fm.Search(id);
+                            break;
+                        }
+                        case 5:
+                            fm.displayAllFeeRecords();
+                            break;
+                        case 6: {
+                            int id;
+                            cout << "Enter Student ID to check due: ";
+                            cin >> id;
+                            fm.checkDue(id);
+                            break;
+                        }
+                        case 7:
+                            cout << "Returning to main menu...\n";
+                            break;
+                        default:
+                            cout << "Invalid choice. Try again.\n";
                     }
-                    case 3: {
-                        int id, total;
-                        cout << "Enter Student ID to update total fee: ";
-                        cin >> id;
-                        cout << "Enter new Total Fee: ";
-                        cin >> total;
-                        fm.Update(id, total);
-                        break;
+                } while (choice != 7);
+                break;
+            }
+
+            case 3: {
+                int choice;
+                do {
+                    cout << "\n-- Mess Attendance Menu --" << endl;
+                    cout << "1. Add Attendance" << endl;
+                    cout << "2. Delete Attendance" << endl;
+                    cout << "3. View All Attendance" << endl;
+                    cout << "4. Search Attendance by Student ID" << endl;
+                    cout << "5. Back to Main Menu" << endl;
+                    cout << "Enter your choice: ";
+                    cin >> choice;
+
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                        cout << "Invalid input! Try again.\n";
+                        continue;
                     }
-                    case 4: {
-                        int id;
-                        cout << "Enter Student ID to search: ";
-                        cin >> id;
-                        fm.Search(id);
-                        break;
+
+                    switch (choice) {
+                        case 1: {
+                            int studentId;
+                            string date, meal;
+                            cout << "Enter Student ID: ";
+                            cin >> studentId;
+                            cout << "Enter Date (YYYY-MM-DD): ";
+                            cin >> date;
+                            cout << "Enter Meal Type (breakfast/lunch/dinner): ";
+                            cin >> meal;
+                            mam.Enqueue(studentId, date, meal);
+                            break;
+                        }
+                        case 2: {
+                            int id;
+                            cout << "Enter Student ID to delete attendance: ";
+                            cin >> id;
+                            mam.Dequeue(id);
+                            break;
+                        }
+                        case 3:
+                            mam.ViewAll();
+                            break;
+
+                        case 4: {
+                            int id;
+                            cout << "Enter Student ID to search attendance: ";
+                            cin >> id;
+                            mam.Search(id);
+                            break;
+                        }
+
+                        case 5:
+                            cout << "Returning to main menu...\n";
+                            break;
+
+                        default:
+                            cout << "Invalid choice. Try again.\n";
                     }
-                    case 5:
-                        fm.displayAllFeeRecords();
-                        break;
-                    case 6: {
-                        int id;
-                        cout << "Enter Student ID to check due: ";
-                        cin >> id;
-                        fm.checkDue(id);
-                        break;
-                    }
-                    case 7:
-                        break;
-                    default:
-                        cout << "Invalid choice!\n";
-                }
-            } while (fChoice != 7);
-            break;
+                } while (choice != 5);
+                break;
+            }
+
+            case 4:
+                cout << "Exiting Program... Goodbye!\n";
+                break;
+
+            default:
+                cout << "Invalid main menu choice. Try again.\n";
         }
 
-        case 3:
-            cout << "Exiting program...\n";
-            break;
-
-        default:
-            cout << "Invalid choice! Please try again.\n";
-    }
-    
-    } while (choice != 3);
+    } while (mainChoice != 4);
 
     return 0;
 }
