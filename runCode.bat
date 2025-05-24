@@ -43,6 +43,7 @@ if %errorlevel% neq 0 (
 )
 
 echo [🚀] Build successful. Running: hostelManagement.exe
-echo ---------------------------------------------------
+echo --------------------------------------------------
+
 %EXE%
 pause
