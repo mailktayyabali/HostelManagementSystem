@@ -2,6 +2,7 @@
 #include "StudentManagement.h"
 #include "FeeManagement.h"
 #include "MessAttendanceManagement.h"
+#include "Room.h"
 
 using namespace std;
 
@@ -9,6 +10,7 @@ int main() {
     StudentManagement sm;
     FeeManagement fm;
     MessAttendanceManagement mam;
+    RoomManagement room(sm);
     int mainChoice;
 
     do {
@@ -16,7 +18,8 @@ int main() {
         cout << "1. Student Management\n";
         cout << "2. Fee Management\n";
         cout << "3. Mess Attendance Management\n";
-        cout << "4. Exit\n";
+        cout << "4. Room Management\n";
+        cout << "5. Exit\n";
         cout << "Enter your choice: ";
         cin >> mainChoice;
 
@@ -28,6 +31,7 @@ int main() {
         }
 
         switch (mainChoice) {
+            // 1. Student Management
             case 1: {
                 int choice;
                 do {
@@ -135,17 +139,18 @@ int main() {
                 break;
             }
 
+            // 2. Fee Management
             case 2: {
                 int choice;
                 do {
-                    cout << "\n-- Fee Management Menu --" << endl;
-                    cout << "1. Add Fee Record" << endl;
-                    cout << "2. Delete Fee Record" << endl;
-                    cout << "3. Update Total Fee" << endl;
-                    cout << "4. Search Fee Record" << endl;
-                    cout << "5. View All Fee Records" << endl;
-                    cout << "6. Check Fee Due" << endl;
-                    cout << "7. Back to Main Menu" << endl;
+                    cout << "\n-- Fee Management Menu --\n";
+                    cout << "1. Add Fee Record\n";
+                    cout << "2. Delete Fee Record\n";
+                    cout << "3. Update Total Fee\n";
+                    cout << "4. Search Fee Record\n";
+                    cout << "5. View All Fee Records\n";
+                    cout << "6. Check Fee Due\n";
+                    cout << "7. Back to Main Menu\n";
                     cout << "Enter your choice: ";
                     cin >> choice;
 
@@ -214,15 +219,16 @@ int main() {
                 break;
             }
 
+            // 3. Mess Attendance Management
             case 3: {
                 int choice;
                 do {
-                    cout << "\n-- Mess Attendance Menu --" << endl;
-                    cout << "1. Add Attendance" << endl;
-                    cout << "2. Delete Attendance" << endl;
-                    cout << "3. View All Attendance" << endl;
-                    cout << "4. Search Attendance by Student ID" << endl;
-                    cout << "5. Back to Main Menu" << endl;
+                    cout << "\n-- Mess Attendance Menu --\n";
+                    cout << "1. Add Attendance\n";
+                    cout << "2. Delete Attendance\n";
+                    cout << "3. View All Attendance\n";
+                    cout << "4. Search Attendance by Student ID\n";
+                    cout << "5. Back to Main Menu\n";
                     cout << "Enter your choice: ";
                     cin >> choice;
 
@@ -246,17 +252,12 @@ int main() {
                             mam.Enqueue(studentId, date, meal);
                             break;
                         }
-                        case 2: {
-                            int id;
-                            cout << "Enter Student ID to delete attendance: ";
-                            cin >> id;
-                            mam.Dequeue();
+                        case 2:
+                            mam.Dequeue(); // Note: Always removes front of queue
                             break;
-                        }
                         case 3:
                             mam.ViewAll();
                             break;
-
                         case 4: {
                             int id;
                             cout << "Enter Student ID to search attendance: ";
@@ -264,11 +265,9 @@ int main() {
                             mam.Search(id);
                             break;
                         }
-
                         case 5:
                             cout << "Returning to main menu...\n";
                             break;
-
                         default:
                             cout << "Invalid choice. Try again.\n";
                     }
@@ -276,7 +275,89 @@ int main() {
                 break;
             }
 
-            case 4:
+            // 4. Room Management
+            case 4: {
+                int choice;
+                do {
+                    cout << "\n-- Room Management Menu --\n";
+                    cout << "1. Add Room\n";
+                    cout << "2. Delete Room\n";
+                    cout << "3. Assign Student to Room\n";
+                    cout << "4. Remove Student from Room\n";
+                    cout << "5. View All Rooms\n";
+                    cout << "6. Back to Main Menu\n";
+                    cout << "Enter your choice: ";
+                    cin >> choice;
+
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                        cout << "Invalid input! Try again.\n";
+                        continue;
+                    }
+
+                    switch (choice) {
+                        case 1: {
+                            Room* newRoom = new Room();
+                            cout << "Enter Room ID: ";
+                            cin >> newRoom->roomId;
+                            cin.ignore();
+
+                            cout << "Enter Room Type (Single/Shared): ";
+                            getline(cin, newRoom->roomType);
+
+                            cout << "Enter Capacity: ";
+                            cin >> newRoom->capacity;
+
+                            room.addRoom(newRoom);
+                            break;
+                        }
+
+                        case 2: {
+                            int id;
+                            cout << "Enter Room ID to delete: ";
+                            cin >> id;
+                            room.deleteRoom(id);
+                            break;
+                        }
+
+                        case 3: {
+                            int roomId, studentId;
+                            cout << "Enter Room ID: ";
+                            cin >> roomId;
+                            cout << "Enter Student ID to assign: ";
+                            cin >> studentId;
+                            room.assignStudentToRoom(roomId, studentId);
+                            break;
+                        }
+
+                        case 4: {
+                            int roomId, studentId;
+                            cout << "Enter Room ID: ";
+                            cin >> roomId;
+                            cout << "Enter Student ID to remove: ";
+                            cin >> studentId;
+                            room.removeStudentFromRoom(roomId, studentId);
+                            break;
+                        }
+
+                        case 5:
+                            room.viewRooms();
+                            break;
+
+                        case 6:
+                            cout << "Returning to main menu...\n";
+                            break;
+
+                        default:
+                            cout << "Invalid option. Try again.\n";
+                    }
+                } while (choice != 6);
+                break;
+            }
+
+            // Exit
+            case 5:
                 cout << "Exiting Program... Goodbye!\n";
                 break;
 
@@ -284,7 +365,7 @@ int main() {
                 cout << "Invalid main menu choice. Try again.\n";
         }
 
-    } while (mainChoice != 4);
+    } while (mainChoice != 5);
 
     return 0;
 }
