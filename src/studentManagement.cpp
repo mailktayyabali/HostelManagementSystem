@@ -1,5 +1,5 @@
 #include "StudentManagement.h"
-#include <unistd.h>   // for sleep
+#include <windows.h>   // for Sleep
 #include <cstdlib>    // for system("cls")
 
 // Validate CNIC format
@@ -20,7 +20,7 @@ void StudentManagement::addStudent(Student* student) {
     }
     students[student->studentId] = student;
     cout << "Student added successfully!" << endl;
-    sleep(2);
+    Sleep(1000); // Sleep for 1 second (Windows)
     system("cls"); // For Linux use: system("clear");
 }
 

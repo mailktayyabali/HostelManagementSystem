@@ -3,6 +3,7 @@
 #include "FeeManagement.h"
 #include "MessAttendanceManagement.h"
 #include "Room.h"
+#include "Validate.h"
 
 using namespace std;
 
@@ -31,7 +32,6 @@ int main() {
         }
 
         switch (mainChoice) {
-            // 1. Student Management
             case 1: {
                 int choice;
                 do {
@@ -54,92 +54,48 @@ int main() {
                     switch (choice) {
                         case 1: {
                             Student* newStudent = new Student();
-                            cout << "Enter ID: ";
-                            cin >> newStudent->studentId;
-                            cin.ignore();
-
-                            cout << "Enter Name: ";
-                            getline(cin, newStudent->studentName);
-
-                            cout << "Enter CNIC (e.g., 12345-1234567-1): ";
-                            getline(cin, newStudent->CNIC);
-                            if (!isValidCNIC(newStudent->CNIC)) {
-                                cout << "Invalid CNIC format!\n";
-                                delete newStudent;
-                                break;
-                            }
-
-                            cout << "Enter Address: ";
-                            getline(cin, newStudent->studentAddress);
-
-                            cout << "Enter Phone: ";
-                            getline(cin, newStudent->studentPhone);
-
+                            newStudent->studentId = getValidatedInt("Enter ID: ");
+                            newStudent->studentName = getValidatedString("Enter Name: ");
+                            newStudent->CNIC = getValidatedCNIC("Enter CNIC (e.g., 12345-1234567-1): ");
+                            newStudent->studentAddress = getValidatedString("Enter Address: ");
+                            newStudent->studentPhone = getValidatedPhone("Enter Phone: ");
                             sm.addStudent(newStudent);
                             break;
                         }
-
                         case 2: {
-                            int id;
-                            cout << "Enter Student ID to delete: ";
-                            cin >> id;
+                            int id = getValidatedInt("Enter Student ID to delete: ");
                             sm.deleteStudent(id);
                             break;
                         }
-
                         case 3: {
-                            int id;
-                            cout << "Enter Student ID to update: ";
-                            cin >> id;
-                            cin.ignore();
-
+                            int id = getValidatedInt("Enter Student ID to update: ");
                             if (!sm.exists(id)) {
                                 cout << "Student not found!\n";
                                 break;
                             }
-
                             Student* updatedStudent = new Student();
                             updatedStudent->studentId = id;
-
-                            cout << "Enter New Name: ";
-                            getline(cin, updatedStudent->studentName);
-
-                            cout << "Enter New CNIC: ";
-                            getline(cin, updatedStudent->CNIC);
-                            if (!isValidCNIC(updatedStudent->CNIC)) {
-                                cout << "Invalid CNIC format!\n";
-                                delete updatedStudent;
-                                break;
-                            }
-
-                            cout << "Enter New Address: ";
-                            getline(cin, updatedStudent->studentAddress);
-
-                            cout << "Enter New Phone: ";
-                            getline(cin, updatedStudent->studentPhone);
-
+                            updatedStudent->studentName = getValidatedString("Enter New Name: ");
+                            updatedStudent->CNIC = getValidatedCNIC("Enter New CNIC: ");
+                            updatedStudent->studentAddress = getValidatedString("Enter New Address: ");
+                            updatedStudent->studentPhone = getValidatedPhone("Enter New Phone: ");
                             sm.updateStudent(id, updatedStudent);
                             delete updatedStudent;
                             break;
                         }
-
                         case 4:
                             sm.viewStudents();
                             break;
-
                         case 5:
                             cout << "Returning to main menu...\n";
                             break;
-
                         default:
                             cout << "Invalid option! Please try again.\n";
                     }
-
                 } while (choice != 5);
                 break;
             }
 
-            // 2. Fee Management
             case 2: {
                 int choice;
                 do {
@@ -163,39 +119,28 @@ int main() {
 
                     switch (choice) {
                         case 1: {
-                            int id, total, paid, security;
-                            string name, date;
-                            cout << "Enter Student ID: "; cin >> id;
-                            cin.ignore();
-                            cout << "Enter Name: "; getline(cin, name);
-                            cout << "Enter Total Fee: "; cin >> total;
-                            cout << "Enter Fee Paid: "; cin >> paid;
-                            cout << "Enter Security Fee: "; cin >> security;
-                            cin.ignore();
-                            cout << "Enter Payment Date: "; getline(cin, date);
+                            int id = getValidatedInt("Enter Student ID: ");
+                            string name = getValidatedString("Enter Name: ");
+                            int total = getValidatedInt("Enter Total Fee: ");
+                            int paid = getValidatedInt("Enter Fee Paid: ");
+                            int security = getValidatedInt("Enter Security Fee: ");
+                            string date = getValidatedString("Enter Payment Date: ");
                             fm.Add(id, name, total, paid, security, date);
                             break;
                         }
                         case 2: {
-                            int id;
-                            cout << "Enter Student ID to delete: ";
-                            cin >> id;
+                            int id = getValidatedInt("Enter Student ID to delete: ");
                             fm.Delete(id);
                             break;
                         }
                         case 3: {
-                            int id, total;
-                            cout << "Enter Student ID to update total fee: ";
-                            cin >> id;
-                            cout << "Enter new Total Fee: ";
-                            cin >> total;
+                            int id = getValidatedInt("Enter Student ID to update total fee: ");
+                            int total = getValidatedInt("Enter new Total Fee: ");
                             fm.Update(id, total);
                             break;
                         }
                         case 4: {
-                            int id;
-                            cout << "Enter Student ID to search: ";
-                            cin >> id;
+                            int id = getValidatedInt("Enter Student ID to search: ");
                             fm.Search(id);
                             break;
                         }
@@ -203,9 +148,7 @@ int main() {
                             fm.displayAllFeeRecords();
                             break;
                         case 6: {
-                            int id;
-                            cout << "Enter Student ID to check due: ";
-                            cin >> id;
+                            int id = getValidatedInt("Enter Student ID to check due: ");
                             fm.checkDue(id);
                             break;
                         }
@@ -219,7 +162,6 @@ int main() {
                 break;
             }
 
-            // 3. Mess Attendance Management
             case 3: {
                 int choice;
                 do {
@@ -241,27 +183,20 @@ int main() {
 
                     switch (choice) {
                         case 1: {
-                            int studentId;
-                            string date, meal;
-                            cout << "Enter Student ID: ";
-                            cin >> studentId;
-                            cout << "Enter Date (YYYY-MM-DD): ";
-                            cin >> date;
-                            cout << "Enter Meal Type (breakfast/lunch/dinner): ";
-                            cin >> meal;
+                            int studentId = getValidatedInt("Enter Student ID: ");
+                            string date = getValidatedString("Enter Date (YYYY-MM-DD): ");
+                            string meal = getValidatedString("Enter Meal Type (breakfast/lunch/dinner): ");
                             mam.Enqueue(studentId, date, meal);
                             break;
                         }
                         case 2:
-                            mam.Dequeue(); // Note: Always removes front of queue
+                            mam.Dequeue();
                             break;
                         case 3:
                             mam.ViewAll();
                             break;
                         case 4: {
-                            int id;
-                            cout << "Enter Student ID to search attendance: ";
-                            cin >> id;
+                            int id = getValidatedInt("Enter Student ID to search attendance: ");
                             mam.Search(id);
                             break;
                         }
@@ -275,7 +210,6 @@ int main() {
                 break;
             }
 
-            // 4. Room Management
             case 4: {
                 int choice;
                 do {
@@ -299,56 +233,35 @@ int main() {
                     switch (choice) {
                         case 1: {
                             Room* newRoom = new Room();
-                            cout << "Enter Room ID: ";
-                            cin >> newRoom->roomId;
-                            cin.ignore();
-
-                            cout << "Enter Room Type (Single/Shared): ";
-                            getline(cin, newRoom->roomType);
-
-                            cout << "Enter Capacity: ";
-                            cin >> newRoom->capacity;
-
+                            newRoom->roomId = getValidatedInt("Enter Room ID: ");
+                            newRoom->roomType = getValidatedString("Enter Room Type (Single/Shared): ");
+                            newRoom->capacity = getValidatedInt("Enter Capacity: ");
                             room.addRoom(newRoom);
                             break;
                         }
-
                         case 2: {
-                            int id;
-                            cout << "Enter Room ID to delete: ";
-                            cin >> id;
+                            int id = getValidatedInt("Enter Room ID to delete: ");
                             room.deleteRoom(id);
                             break;
                         }
-
                         case 3: {
-                            int roomId, studentId;
-                            cout << "Enter Room ID: ";
-                            cin >> roomId;
-                            cout << "Enter Student ID to assign: ";
-                            cin >> studentId;
+                            int roomId = getValidatedInt("Enter Room ID: ");
+                            int studentId = getValidatedInt("Enter Student ID to assign: ");
                             room.assignStudentToRoom(roomId, studentId);
                             break;
                         }
-
                         case 4: {
-                            int roomId, studentId;
-                            cout << "Enter Room ID: ";
-                            cin >> roomId;
-                            cout << "Enter Student ID to remove: ";
-                            cin >> studentId;
+                            int roomId = getValidatedInt("Enter Room ID: ");
+                            int studentId = getValidatedInt("Enter Student ID to remove: ");
                             room.removeStudentFromRoom(roomId, studentId);
                             break;
                         }
-
                         case 5:
                             room.viewRooms();
                             break;
-
                         case 6:
                             cout << "Returning to main menu...\n";
                             break;
-
                         default:
                             cout << "Invalid option. Try again.\n";
                     }
@@ -356,7 +269,6 @@ int main() {
                 break;
             }
 
-            // Exit
             case 5:
                 cout << "Exiting Program... Goodbye!\n";
                 break;
