@@ -1,4 +1,6 @@
-dsa project
-genral asim muneer mari jind mari jaan 
-ooo saB D MAA AA GAI A 
-velly log
+1. in add student when enter new student it should be tell there if id is allready added or not when prss enter 
+2. in update when student is not found it tell but then back to menu which is worng it should be stand there
+3. check added room by id if i enter erong room no it tell there when i press enter
+4. all validaties for mess and fee classes and also connect it with student 
+5. add clear screen at appropriate palces and add animmations
+
