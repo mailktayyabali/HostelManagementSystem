@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include "StudentManagement.h"
 using namespace std;
 
 struct AttendanceNode {
@@ -19,9 +20,10 @@ class MessAttendanceManagement {
 private:
     AttendanceNode* front;
     AttendanceNode* rear;
+    StudentManagement* studentManager;
 
 public:
-    MessAttendanceManagement();
+    MessAttendanceManagement(StudentManagement* sm);
     ~MessAttendanceManagement();
 
     void Enqueue(int studentId, string date, string mealType);

@@ -1,7 +1,8 @@
 #include "MessAttendanceManagement.h"
 
-MessAttendanceManagement::MessAttendanceManagement() {
+MessAttendanceManagement::MessAttendanceManagement(StudentManagement* sm) {
     front = rear = nullptr;
+    studentManager = sm;
 }
 
 MessAttendanceManagement::~MessAttendanceManagement() {
@@ -11,6 +12,11 @@ MessAttendanceManagement::~MessAttendanceManagement() {
 }
 
 void MessAttendanceManagement::Enqueue(int studentId, string date, string mealType) {
+    if (!studentManager->exists(studentId)) {
+        cout << "❌ Cannot add attendance. Student ID " << studentId << " is not registered.\n";
+        return;
+    }
+
     AttendanceNode* newNode = new AttendanceNode(studentId, date, mealType);
 
     if (rear == nullptr) {
@@ -20,13 +26,13 @@ void MessAttendanceManagement::Enqueue(int studentId, string date, string mealTy
         rear = newNode;
     }
 
-    cout << " Attendance added for Student ID " << studentId
+    cout << "✅ Attendance added for Student ID " << studentId
          << " on " << date << " for " << mealType << ".\n";
 }
 
 void MessAttendanceManagement::Dequeue() {
     if (front == nullptr) {
-        cout << " No attendance records to remove.\n";
+        cout << "⚠ No attendance records to remove.\n";
         return;
     }
 
@@ -37,7 +43,7 @@ void MessAttendanceManagement::Dequeue() {
         rear = nullptr;
     }
 
-    cout << " Removed attendance record for Student ID " << temp->studentId
+    cout << "🗑 Removed attendance for Student ID " << temp->studentId
          << " on " << temp->date << " (" << temp->mealType << ").\n";
 
     delete temp;
@@ -50,7 +56,7 @@ void MessAttendanceManagement::ViewAll() {
     }
 
     AttendanceNode* temp = front;
-    cout << "\n Mess Attendance Records:\n";
+    cout << "\n📋 Mess Attendance Records:\n";
     cout << "----------------------------------------\n";
     while (temp != nullptr) {
         cout << "Student ID: " << temp->studentId
@@ -67,7 +73,7 @@ void MessAttendanceManagement::Search(int studentId) {
     while (temp != nullptr) {
         if (temp->studentId == studentId) {
             if (!found) {
-                cout << "\n Attendance for Student ID " << studentId << ":\n";
+                cout << "\n🔍 Attendance for Student ID " << studentId << ":\n";
                 cout << "----------------------------------------\n";
             }
             cout << "Date: " << temp->date << " | Meal: " << temp->mealType << endl;
@@ -77,6 +83,6 @@ void MessAttendanceManagement::Search(int studentId) {
     }
 
     if (!found) {
-        cout << " No attendance found for Student ID " << studentId << ".\n";
+        cout << "❌ No attendance found for Student ID " << studentId << ".\n";
     }
 }

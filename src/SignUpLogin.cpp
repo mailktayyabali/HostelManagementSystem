@@ -83,27 +83,27 @@ public:
     }
 };
 
-int main() {
-    SignUpLogin auth;
-    int choice;
+// int main() {
+//     SignUpLogin auth;
+//     int choice;
 
-    while (true) {
-        cout << "\n1. Sign Up\n2. Login\n3. Exit\nChoose option: ";
-        cin >> choice;
+//     while (true) {
+//         cout << "\n1. Sign Up\n2. Login\n3. Exit\nChoose option: ";
+//         cin >> choice;
 
-        if (choice == 1) {
-            auth.SignUp();
-        }
-        else if (choice == 2) {
-            auth.Login();
-        }
-        else if (choice == 3) {
-            cout << "Exiting...\n";
-            break;
-        }
-        else {
-            cout << "Invalid choice, try again.\n";
-        }
-    }
-    return 0;
-}
+//         if (choice == 1) {
+//             auth.SignUp();
+//         }
+//         else if (choice == 2) {
+//             auth.Login();
+//         }
+//         else if (choice == 3) {
+//             cout << "Exiting...\n";
+//             break;
+//         }
+//         else {
+//             cout << "Invalid choice, try again.\n";
+//         }
+//     }
+//     return 0;
+// }
