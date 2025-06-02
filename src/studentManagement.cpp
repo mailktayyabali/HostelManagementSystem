@@ -59,8 +59,8 @@ void StudentManagement::viewStudents() {
 
     for (const auto& pair : students) {
         const Student* student = pair.second;
-        cout << "ID: " << student->studentId << endl;
-        cout << "Name: " << student->studentName << endl;
+        cout << "Student ID: " << student->studentId << endl;
+        cout << "Student Name: " << student->studentName << endl;
         cout << "CNIC: " << student->CNIC << endl;
         cout << "Address: " << student->studentAddress << endl;
         cout << "Phone: " << student->studentPhone << endl;

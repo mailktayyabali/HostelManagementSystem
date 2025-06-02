@@ -9,7 +9,7 @@ using namespace std;
 
 int main() {
     StudentManagement sm;
-    FeeManagement fm;
+    FeeManagement fm(&sm);  // Link FeeManagement with StudentManagement
     MessAttendanceManagement mam;
     RoomManagement room(sm);
     int mainChoice;
@@ -102,10 +102,10 @@ int main() {
                     cout << "\n-- Fee Management Menu --\n";
                     cout << "1. Add Fee Record\n";
                     cout << "2. Delete Fee Record\n";
-                    cout << "3. Update Total Fee\n";
-                    cout << "4. Search Fee Record\n";
-                    cout << "5. View All Fee Records\n";
-                    cout << "6. Check Fee Due\n";
+                    cout << "3. Update Fee Record\n";
+                    cout << "4. Search Fee Record by Student ID\n";
+                    cout << "5. Check Due Amount\n";
+                    cout << "6. View All Fee Records\n";
                     cout << "7. Back to Main Menu\n";
                     cout << "Enter your choice: ";
                     cin >> choice;
@@ -119,49 +119,51 @@ int main() {
 
                     switch (choice) {
                         case 1: {
-                            int id = getValidatedInt("Enter Student ID: ");
-                            string name = getValidatedString("Enter Name: ");
-                            int total = getValidatedInt("Enter Total Fee: ");
-                            int paid = getValidatedInt("Enter Fee Paid: ");
-                            int security = getValidatedInt("Enter Security Fee: ");
-                            string date = getValidatedString("Enter Payment Date: ");
-                            fm.Add(id, name, total, paid, security, date);
+                            int studentId = getValidatedInt("Enter Student ID: ");
+                            int totalFee = getValidatedInt("Enter Total Fee: ");
+                            int paidFee = getValidatedInt("Enter Paid Fee: ");
+                            int securityFee = getValidatedInt("Enter Security Fee: ");
+                            string date = getValidatedString("Enter Date (YYYY-MM-DD): ");
+                            fm.Add(studentId, totalFee, paidFee, securityFee, date);
                             break;
                         }
                         case 2: {
-                            int id = getValidatedInt("Enter Student ID to delete: ");
-                            fm.Delete(id);
+                            int studentId = getValidatedInt("Enter Student ID to delete fee record: ");
+                            fm.Delete(studentId);
                             break;
                         }
                         case 3: {
-                            int id = getValidatedInt("Enter Student ID to update total fee: ");
-                            int total = getValidatedInt("Enter new Total Fee: ");
-                            fm.Update(id, total);
+                            int studentId = getValidatedInt("Enter Student ID to update fee record: ");
+                            int totalFee = getValidatedInt("Enter New Total Fee: ");
+                            int paidFee = getValidatedInt("Enter New Paid Fee: ");
+                            int securityFee = getValidatedInt("Enter New Security Fee: ");
+                            string date = getValidatedString("Enter New Date (YYYY-MM-DD): ");
+                            fm.Update(studentId, totalFee, paidFee, securityFee, date);
                             break;
                         }
                         case 4: {
-                            int id = getValidatedInt("Enter Student ID to search: ");
-                            fm.Search(id);
+                            int studentId = getValidatedInt("Enter Student ID to search fee record: ");
+                            fm.Search(studentId);
                             break;
                         }
-                        case 5:
-                            fm.displayAllFeeRecords();
-                            break;
-                        case 6: {
-                            int id = getValidatedInt("Enter Student ID to check due: ");
-                            fm.checkDue(id);
+                        case 5: {
+                            int studentId = getValidatedInt("Enter Student ID to check due amount: ");
+                            fm.CheckDue(studentId);
                             break;
                         }
+                        case 6:
+                            fm.View();
+                            break;
                         case 7:
                             cout << "Returning to main menu...\n";
                             break;
                         default:
                             cout << "Invalid choice. Try again.\n";
                     }
-                } while (choice != 7);
+                } while (choice != 7);  
                 break;
-            }
-
+            }   
+            
             case 3: {
                 int choice;
                 do {
