@@ -11,7 +11,7 @@ using namespace std;
 int main() {
     StudentManagement sm;
     FeeManagement fm(&sm);  // Link FeeManagement with StudentManagement
-    MessAttendanceManagement mam;
+    MessAttendanceManagement mam(&sm);
     RoomManagement room(sm);
     int mainChoice;
 
