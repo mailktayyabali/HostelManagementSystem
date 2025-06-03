@@ -1,2 +1,2 @@
-src/MessManagement.exe
-src/main.exe
+*.exe
+*.o
