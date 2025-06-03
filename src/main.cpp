@@ -4,6 +4,7 @@
 #include "MessAttendanceManagement.h"
 #include "Room.h"
 #include "Validate.h"
+#include <cstdlib>
 
 using namespace std;
 
@@ -15,6 +16,7 @@ int main() {
     int mainChoice;
 
     do {
+        system("cls");
         cout << "\n===== Hostel Management System =====\n";
         cout << "1. Student Management\n";
         cout << "2. Fee Management\n";
@@ -35,6 +37,7 @@ int main() {
             case 1: {
                 int choice;
                 do {
+                    
                     cout << "\n--- Student Management Menu ---\n";
                     cout << "1. Add Student\n";
                     cout << "2. Delete Student\n";
@@ -48,6 +51,7 @@ int main() {
                         cin.clear();
                         cin.ignore(1000, '\n');
                         cout << "Invalid input! Try again.\n";
+                        
                         continue;
                     }
 
@@ -277,6 +281,7 @@ int main() {
 
             default:
                 cout << "Invalid main menu choice. Try again.\n";
+               
         }
 
     } while (mainChoice != 5);
