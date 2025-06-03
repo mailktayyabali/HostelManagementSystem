@@ -3,6 +3,7 @@
 #include "FeeManagement.h"
 #include "MessAttendanceManagement.h"
 #include "Room.h"
+#include "VisitorManagement.h"
 #include "Validate.h"
 #include <cstdlib>
 
@@ -10,9 +11,10 @@ using namespace std;
 
 int main() {
     StudentManagement sm;
-    FeeManagement fm(&sm);  // Link FeeManagement with StudentManagement
+    FeeManagement fm(&sm);  
     MessAttendanceManagement mam(&sm);
     RoomManagement room(sm);
+    VisitorManagement vm;
     int mainChoice;
 
     do {
@@ -22,7 +24,8 @@ int main() {
         cout << "2. Fee Management\n";
         cout << "3. Mess Attendance Management\n";
         cout << "4. Room Management\n";
-        cout << "5. Exit\n";
+        cout << "5. Visitor Management\n";
+        cout << "6. Exit\n";
         cout << "Enter your choice: ";
         cin >> mainChoice;
 
@@ -275,7 +278,67 @@ int main() {
                 break;
             }
 
-            case 5:
+            case 5: {
+                int choice;
+                do {
+                    cout << "\n-- Visitor Management Menu --\n";
+                    cout << "1. Add Visitor\n";
+                    cout << "2. Delete Visitor\n";
+                    cout << "3. Update Visitor\n";
+                    cout << "4. Search Visitor by ID\n";
+                    cout << "5. View All Visitors\n";
+                    cout << "6. Back to Main Menu\n";
+                    cout << "Enter your choice: ";
+                    cin >> choice;
+
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                        cout << "Invalid input! Try again.\n";
+                        continue;
+                    }
+
+                    switch (choice) {
+                        case 1: {
+                            int id = getValidatedInt("Enter Visitor ID: ");
+                            string name = getValidatedString("Enter Visitor Name: ");
+                            string purpose = getValidatedString("Enter Purpose of Visit: ");
+                            string date = getValidatedString("Enter Visit Date (YYYY-MM-DD): ");
+                            vm.Add(id, name, purpose, date);
+                            break;
+                        }
+                        case 2: {
+                            int id = getValidatedInt("Enter Visitor ID to delete: ");
+                            vm.Delete(id);
+                            break;
+                        }
+                        case 3: {
+                            int id = getValidatedInt("Enter Visitor ID to update: ");
+                            string name = getValidatedString("Enter New Name: ");
+                            string purpose = getValidatedString("Enter New Purpose: ");
+                            string date = getValidatedString("Enter New Date (YYYY-MM-DD): ");
+                            vm.Update(id, name, purpose, date);
+                            break;
+                        }
+                        case 4: {
+                            int id = getValidatedInt("Enter Visitor ID to search: ");
+                            vm.Search(id);
+                            break;
+                        }
+                        case 5:
+                            vm.View();
+                            break;
+                        case 6:
+                            cout << "Returning to main menu...\n";
+                            break;
+                        default:
+                            cout << "Invalid choice. Try again.\n";
+                    }
+                } while (choice != 6);
+                break;
+            }
+
+            case 6:
                 cout << "Exiting Program... Goodbye!\n";
                 break;
 
@@ -284,7 +347,7 @@ int main() {
                
         }
 
-    } while (mainChoice != 5);
+    } while (mainChoice != 6);
 
     return 0;
 }
