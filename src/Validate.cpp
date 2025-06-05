@@ -10,7 +10,7 @@ int getValidatedInt(const string& prompt) {
         cout << prompt;
         cin >> value;
         if (!cin.fail()) {
-            cin.ignore(1000, '\n');
+            cin.ignore(1000, '\n'); // clear leftover newline
             return value;
         } else {
             cin.clear();
@@ -22,20 +22,21 @@ int getValidatedInt(const string& prompt) {
 
 string getValidatedString(const string& prompt) {
     string value;
+    regex pattern(R"(^[A-Za-z\s]+$)"); // letters and spaces only
     while (true) {
         cout << prompt;
-        getline(cin >> ws, value);
-        if (!value.empty()) return value;
-        cout << "Input cannot be empty. Try again.\n";
+        getline(cin, value);  // no cin.ignore() here
+        if (!value.empty() && regex_match(value, pattern)) return value;
+        cout << "Invalid input. Only letters and spaces are allowed. Try again.\n";
     }
 }
 
 string getValidatedCNIC(const string& prompt) {
     string cnic;
-    regex pattern(R"(\d{5}-\d{7}-\d{1})");
+    regex pattern(R"(^\d{5}-\d{7}-\d{1}$)");
     while (true) {
         cout << prompt;
-        getline(cin >> ws, cnic);
+        getline(cin, cnic);  // no cin.ignore() here
         if (regex_match(cnic, pattern)) return cnic;
         cout << "Invalid CNIC format. Correct format: 12345-1234567-1\n";
     }
@@ -43,10 +44,10 @@ string getValidatedCNIC(const string& prompt) {
 
 string getValidatedPhone(const string& prompt) {
     string phone;
-    regex pattern(R"(03\d{9})");
+    regex pattern(R"(^03\d{9}$)");
     while (true) {
         cout << prompt;
-        getline(cin >> ws, phone);
+        getline(cin, phone);  // no cin.ignore() here
         if (regex_match(phone, pattern)) return phone;
         cout << "Invalid phone number. Must start with 03 and have 11 digits total.\n";
     }

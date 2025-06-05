@@ -11,7 +11,6 @@ bool FeeManagement::Add(int studentID, int totalFee, int paidFee, int securityFe
         cout << "Student does not exist!\n";
         return false;
     }
-
     FeeRecord record = { totalFee, paidFee, securityFee, date };
     feeTable[studentID] = record;
     cout << "Fee record added.\n";
@@ -19,6 +18,10 @@ bool FeeManagement::Add(int studentID, int totalFee, int paidFee, int securityFe
 }
 
 bool FeeManagement::Delete(int studentID) {
+    if (!sm->exists(studentID)) {
+        cout << "Student does not exist!\n";
+        return false;
+    }
     if (feeTable.erase(studentID)) {
         cout << "Record deleted.\n";
         return true;
@@ -28,6 +31,10 @@ bool FeeManagement::Delete(int studentID) {
 }
 
 bool FeeManagement::Update(int studentID, int totalFee, int paidFee, int securityFee, const string& date) {
+    if (!sm->exists(studentID)) {
+        cout << "Student does not exist!\n";
+        return false;
+    }
     auto it = feeTable.find(studentID);
     if (it != feeTable.end()) {
         it->second = { totalFee, paidFee, securityFee, date };

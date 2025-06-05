@@ -8,6 +8,7 @@ void RoomManagement::addRoom(Room* room) {
         return;
     }
     rooms.push_back(room);
+    roomHeap.push(room); // Add to min heap
     cout << "Room added successfully!" << endl;
 }
 
@@ -17,6 +18,13 @@ void RoomManagement::deleteRoom(int roomId) {
             delete rooms[i];
             rooms.erase(rooms.begin() + i);
             cout << "Room deleted successfully!" << endl;
+
+            // Rebuild min heap after deletion
+            roomHeap.clear();
+            for (Room* r : rooms) {
+                roomHeap.push(r);
+            }
+
             return;
         }
     }
@@ -46,6 +54,13 @@ void RoomManagement::assignStudentToRoom(int roomId, int studentId) {
 
             room->occupants.push_back(studentId);
             cout << "Student assigned to room!" << endl;
+
+            // Rebuild the heap since occupancy has changed
+            roomHeap.clear();
+            for (Room* r : rooms) {
+                roomHeap.push(r);
+            }
+
             return;
         }
     }
@@ -62,6 +77,13 @@ void RoomManagement::removeStudentFromRoom(int roomId, int studentId) {
                     room->occupants.erase(room->occupants.begin() + i);
                     cout << "Student removed from room!" << endl;
                     found = true;
+
+                    // Rebuild heap after occupancy update
+                    roomHeap.clear();
+                    for (Room* r : rooms) {
+                        roomHeap.push(r);
+                    }
+
                     break;
                 }
             }
@@ -81,7 +103,16 @@ void RoomManagement::viewRooms() {
         return;
     }
 
-    for (const Room* room : rooms) {
+    // Optional: View rooms in increasing order of occupancy using Min Heap
+    cout << "--- Rooms (Sorted by Least Occupied) ---" << endl;
+    RoomMinHeap tempHeap = roomHeap; // make a copy to avoid modifying original
+
+    while (!tempHeap.empty()) {
+        Room* room = tempHeap.top();
+        tempHeap.getHeap()[0] = tempHeap.getHeap().back();
+        tempHeap.getHeap().pop_back();
+        tempHeap.rebuild();
+
         cout << "Room ID: " << room->roomId << endl;
         cout << "Type: " << room->roomType << endl;
         cout << "Capacity: " << room->capacity << endl;

@@ -126,7 +126,12 @@ int main() {
 
                     switch (choice) {
                         case 1: {
-                            int studentId = getValidatedInt("Enter Student ID: ");
+                            int studentId;
+                            while (true) {
+                                studentId = getValidatedInt("Enter Student ID: ");
+                                if (sm.exists(studentId)) break;
+                                cout << "Student does not exist! Please enter a valid ID.\n";
+                            }
                             int totalFee = getValidatedInt("Enter Total Fee: ");
                             int paidFee = getValidatedInt("Enter Paid Fee: ");
                             int securityFee = getValidatedInt("Enter Security Fee: ");
@@ -136,11 +141,19 @@ int main() {
                         }
                         case 2: {
                             int studentId = getValidatedInt("Enter Student ID to delete fee record: ");
+                            if (!sm.exists(studentId)) {
+                                cout << "Student not found!\n";
+                                break;
+                            }
                             fm.Delete(studentId);
                             break;
                         }
                         case 3: {
                             int studentId = getValidatedInt("Enter Student ID to update fee record: ");
+                            if (!sm.exists(studentId)) {
+                                cout << "Student not found!\n";
+                                break;
+                            }
                             int totalFee = getValidatedInt("Enter New Total Fee: ");
                             int paidFee = getValidatedInt("Enter New Paid Fee: ");
                             int securityFee = getValidatedInt("Enter New Security Fee: ");
@@ -150,6 +163,10 @@ int main() {
                         }
                         case 4: {
                             int studentId = getValidatedInt("Enter Student ID to search fee record: ");
+                            if (!sm.exists(studentId)) {
+                                cout << "Student not found!\n";
+                                break;
+                            }
                             fm.Search(studentId);
                             break;
                         }
