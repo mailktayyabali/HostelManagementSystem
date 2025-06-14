@@ -11,9 +11,9 @@ bool FeeManagement::Add(int studentID, int totalFee, int paidFee, int securityFe
         cout << "Student does not exist!\n";
         return false;
     }
-   if (feeTable.find(studentID) != feeTable.end()) {
-        cout << "Fee record for this student already exists!\n";
-        return false;
+     if (feeTable.find(studentID) != feeTable.end()) {
+        cout << "Fee record for this student already exists!\n";
+         return false;
 }
     FeeRecord record = { totalFee, paidFee, securityFee, date };
     feeTable[studentID] = record;
