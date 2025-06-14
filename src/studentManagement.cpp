@@ -1,16 +1,9 @@
 #include "StudentManagement.h"
-#include <windows.h>   // for Sleep
-#include <cstdlib>    // for system("cls")
+#include <fstream>
+#include <iomanip>
+#include <cstdlib>  // system("cls")
 
-// Validate CNIC format
-bool isValidCNIC(const string& cnic) {
-    for (char c : cnic) {
-        if (!isdigit(c) && c != '-') {
-            return false;
-        }
-    }
-    return !cnic.empty();
-}
+using json = nlohmann::json;
 
 // Add new student
 void StudentManagement::addStudent(Student* student) {
@@ -20,8 +13,8 @@ void StudentManagement::addStudent(Student* student) {
     }
     students[student->studentId] = student;
     cout << "Student added successfully!" << endl;
-    Sleep(1000); // Sleep for 1 second (Windows)
-    system("cls"); // For Linux use: system("clear");
+
+    system("cls"); // For Linux/macOS: system("clear");
 }
 
 // Delete student
@@ -71,4 +64,103 @@ void StudentManagement::viewStudents() {
 // Check if student exists
 bool StudentManagement::exists(int studentId) const {
     return students.find(studentId) != students.end();
+}
+
+// Save all students to JSON file
+void StudentManagement::saveStudentsToFile(const string& filename) {
+    json jArray = json::array();
+    for (const auto& pair : students) {
+        jArray.push_back(pair.second->toJson());
+    }
+
+    ofstream outFile(filename);
+    if (outFile.is_open()) {
+        outFile << setw(4) << jArray;
+        outFile.close();
+        cout << "Students saved to " << filename << endl;
+    } else {
+        cout << "Failed to save student data!" << endl;
+    }
+}
+
+// Load all students from JSON file
+void StudentManagement::loadStudentsFromFile(const string& filename) {
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        cout << "No student file found!" << endl;
+        return;
+    }
+
+    json jArray;
+    inFile >> jArray;
+    inFile.close();
+
+    for (const auto& j : jArray) {
+        Student* student = new Student();
+        student->fromJson(j);
+        students[student->studentId] = student;
+    }
+
+    cout << "Students loaded from " << filename << endl;
+}
+
+// Update a specific student inside the file
+void StudentManagement::updateStudentInFile(const string& filename, int studentId, const Student& updatedStudent) {
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        cout << "⚠️ Could not open file for updating!" << endl;
+        return;
+    }
+
+    json jArray;
+    inFile >> jArray;
+    inFile.close();
+
+    bool found = false;
+    for (auto& j : jArray) {
+        if (j["studentId"] == studentId) {
+            j = updatedStudent.toJson();
+            found = true;
+            break;
+        }
+    }
+
+    if (found) {
+        ofstream outFile(filename);
+        outFile << jArray.dump(4);
+        outFile.close();
+        cout << "✅ Student updated in file successfully!" << endl;
+    } else {
+        cout << "❌ Student ID not found in file." << endl;
+    }
+}
+// Delete student from file
+void StudentManagement::deleteStudentFromFile(const string& filename, int studentId) {
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        cout << "⚠️ Could not open file for deletion!" << endl;
+        return;
+    }
+
+    json jArray;
+    inFile >> jArray;
+    inFile.close();
+
+    bool deleted = false;
+    for (auto it = jArray.begin(); it != jArray.end(); ++it) {
+        if ((*it)["studentId"] == studentId) {
+            jArray.erase(it);
+            deleted = true;
+            break;
+        }
+    }
+
+    if (deleted) {
+        ofstream outFile(filename);
+        outFile << jArray.dump(4);
+        outFile.close();
+        cout << "✅ Student deleted from file successfully!" << endl;
+    } else {
+        cout << "❌ Student ID not found in file." << endl;
+    }
 }

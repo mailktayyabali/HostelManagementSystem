@@ -34,7 +34,7 @@ for /R %%f in (%SRCDIR%\*.cpp %DBDIR%\*.cpp) do (
 
 :: Link all object files
 echo [📦] Linking...
-g++ %OUTDIR%\*.o -o %EXE%
+g++ -std=c++17 %OUTDIR%\*.o -o %EXE%
 
 if %errorlevel% neq 0 (
     echo [❌] Linking failed!

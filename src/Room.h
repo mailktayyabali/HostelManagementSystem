@@ -4,81 +4,58 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
+#include "../Database/json.hpp" // JSON header
 #include "StudentManagement.h"
 
 using namespace std;
+using json = nlohmann::json;
 
 class Room {
 public:
     int roomId;
-    string roomType;  // "Single" or "Shared"
+    string roomType;
     int capacity;
     vector<int> occupants;
 
     bool isAvailable() const {
         return occupants.size() < capacity;
     }
+
+    json toJson() const {
+        return json{
+            {"roomId", roomId},
+            {"roomType", roomType},
+            {"capacity", capacity},
+            {"occupants", occupants}
+        };
+    }
+
+    void fromJson(const json& j) {
+        roomId = j.at("roomId").get<int>();
+        roomType = j.at("roomType").get<string>();
+        capacity = j.at("capacity").get<int>();
+        occupants = j.at("occupants").get<vector<int>>();
+    }
 };
 
-// ✅ Custom Min Heap to maintain least-occupied room ordering
 class RoomMinHeap {
 private:
     vector<Room*> heap;
-
     int parent(int i) { return (i - 1) / 2; }
     int left(int i) { return 2 * i + 1; }
     int right(int i) { return 2 * i + 2; }
 
-    void heapifyUp(int index) {
-        while (index > 0 && heap[parent(index)]->occupants.size() > heap[index]->occupants.size()) {
-            swap(heap[index], heap[parent(index)]);
-            index = parent(index);
-        }
-    }
-
-    void heapifyDown(int index) {
-        int smallest = index;
-        int l = left(index);
-        int r = right(index);
-
-        if (l < heap.size() && heap[l]->occupants.size() < heap[smallest]->occupants.size())
-            smallest = l;
-        if (r < heap.size() && heap[r]->occupants.size() < heap[smallest]->occupants.size())
-            smallest = r;
-
-        if (smallest != index) {
-            swap(heap[index], heap[smallest]);
-            heapifyDown(smallest);
-        }
-    }
+    void heapifyUp(int index);
+    void heapifyDown(int index);
 
 public:
-    void push(Room* room) {
-        heap.push_back(room);
-        heapifyUp(heap.size() - 1);
-    }
-
-    void rebuild() {
-        for (int i = heap.size() / 2 - 1; i >= 0; i--)
-            heapifyDown(i);
-    }
-
-    Room* top() {
-        if (heap.empty()) return nullptr;
-        return heap[0];
-    }
-
-    void clear() {
-        heap.clear();
-    }
-
-    vector<Room*>& getHeap() {
-        return heap;
-    }
-
-    bool empty() const {
-        return heap.empty();
-    }
+    void push(Room* room);
+    void rebuild();
+    Room* top();
+    void clear();
+    vector<Room*>& getHeap();
+    bool empty() const;
 };
 
 class RoomManagement {
@@ -87,15 +64,19 @@ public:
 
     void addRoom(Room* room);
     void deleteRoom(int roomId);
-    void assignStudentToRoom(int roomId, int studentId);  // manual assignment
+    void assignStudentToRoom(int roomId, int studentId);
     void removeStudentFromRoom(int roomId, int studentId);
     void viewRooms();
     bool exists(int roomId) const;
+    void saveRoomsToFile(const string& filename);
+    void loadRoomsFromFile(const string& filename);
+    void updateRoomInFile(const string& filename, int roomId);
+    void deleteRoomFromFile(const string& filename, int roomId);
 
 private:
     vector<Room*> rooms;
     StudentManagement& studentManager;
-    RoomMinHeap roomHeap; // ✅ used internally to manage least-filled room ordering
+    RoomMinHeap roomHeap;
 };
 
 #endif // ROOM_MANAGEMENT_H

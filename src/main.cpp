@@ -16,6 +16,7 @@ int main() {
     RoomManagement room(sm);
     VisitorManagement vm;
     int mainChoice;
+    room.loadRoomsFromFile("rooms.json"); // Load rooms from file at startup
 
     do {
         system("cls");
@@ -60,18 +61,30 @@ int main() {
 
                     switch (choice) {
                         case 1: {
+                            int studentId;
+                            while (true) {
+                                studentId = getValidatedInt("Enter ID: ");
+                                if (sm.exists(studentId)) {
+                                    cout << "This ID already exists! Please enter a different ID.\n";
+                                } else {
+                                    break;
+                                }
+                            }
                             Student* newStudent = new Student();
-                            newStudent->studentId = getValidatedInt("Enter ID: ");
+                            newStudent->studentId = studentId;
                             newStudent->studentName = getValidatedString("Enter Name: ");
                             newStudent->CNIC = getValidatedCNIC("Enter CNIC (e.g., 12345-1234567-1): ");
                             newStudent->studentAddress = getValidatedString("Enter Address: ");
                             newStudent->studentPhone = getValidatedPhone("Enter Phone: ");
                             sm.addStudent(newStudent);
+                            sm.saveStudentsToFile("students.json");
                             break;
                         }
                         case 2: {
                             int id = getValidatedInt("Enter Student ID to delete: ");
+                            
                             sm.deleteStudent(id);
+                            sm.deleteStudentFromFile("students.json",id);
                             break;
                         }
                         case 3: {
@@ -87,10 +100,12 @@ int main() {
                             updatedStudent->studentAddress = getValidatedString("Enter New Address: ");
                             updatedStudent->studentPhone = getValidatedPhone("Enter New Phone: ");
                             sm.updateStudent(id, updatedStudent);
+                            sm.updateStudentInFile("students.json",id, *updatedStudent );
                             delete updatedStudent;
                             break;
                         }
                         case 4:
+                            sm.loadStudentsFromFile("students.json"); // Load students from file before viewing
                             sm.viewStudents();
                             break;
                         case 5:
@@ -258,32 +273,56 @@ int main() {
 
                     switch (choice) {
                         case 1: {
+                            int roomId;
+                            while (true) {
+                                roomId = getValidatedInt("Enter Room ID: ");
+                                if (room.exists(roomId)) {
+                                    cout << "This Room ID already exists! Please enter a different Room ID.\n";
+                                } else {
+                                    break;
+                                }
+                            }
                             Room* newRoom = new Room();
-                            newRoom->roomId = getValidatedInt("Enter Room ID: ");
+                            newRoom->roomId = roomId;
                             newRoom->roomType = getValidatedString("Enter Room Type (Single/Shared): ");
                             newRoom->capacity = getValidatedInt("Enter Capacity: ");
                             room.addRoom(newRoom);
+                            room.saveRoomsToFile("rooms.json"); // Save rooms to file after adding
                             break;
                         }
                         case 2: {
                             int id = getValidatedInt("Enter Room ID to delete: ");
                             room.deleteRoom(id);
+                            room.deleteRoomFromFile("rooms.json", id); // Delete from file
                             break;
                         }
                         case 3: {
                             int roomId = getValidatedInt("Enter Room ID: ");
+                            while (!room.exists(roomId)) {
+                                cout << "Room not found! Please enter a valid Room ID: ";
+                                roomId = getValidatedInt("");
+                            }
                             int studentId = getValidatedInt("Enter Student ID to assign: ");
+                            while(!sm.exists(studentId)){
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                studentId = getValidatedInt("");
+                            }
                             room.assignStudentToRoom(roomId, studentId);
+                            room.updateRoomInFile("rooms.json", roomId); // Update room in file after assigning student
                             break;
                         }
                         case 4: {
                             int roomId = getValidatedInt("Enter Room ID: ");
+
                             int studentId = getValidatedInt("Enter Student ID to remove: ");
                             room.removeStudentFromRoom(roomId, studentId);
+                            room.updateRoomInFile("rooms.json", roomId); // Update room in file after removing student
                             break;
                         }
                         case 5:
+                            room.loadRoomsFromFile("rooms.json"); // Load rooms from file before viewing
                             room.viewRooms();
+
                             break;
                         case 6:
                             cout << "Returning to main menu...\n";
