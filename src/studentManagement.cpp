@@ -72,3 +72,12 @@ void StudentManagement::viewStudents() {
 bool StudentManagement::exists(int studentId) const {
     return students.find(studentId) != students.end();
 }
+
+// Get pointer to student by ID
+Student* StudentManagement::getStudent(int studentId) const {
+    auto it = students.find(studentId);
+    if (it != students.end()) {
+        return it->second;
+    }
+    return nullptr;
+}

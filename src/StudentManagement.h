@@ -23,6 +23,8 @@ public:
     void updateStudent(int studentId, Student* updatedStudent);
     void viewStudents();
     bool exists(int studentId) const;
+    
+    Student* getStudent(int studentId) const;
 
 private:
     unordered_map<int, Student*> students;
