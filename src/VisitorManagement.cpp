@@ -2,8 +2,9 @@
 #include <iostream>
 using namespace std;
 
-VisitorManagement::VisitorManagement() {
+VisitorManagement::VisitorManagement(StudentManagement* sm) {
     head = nullptr;
+    studentManager = sm;
 }
 
 VisitorManagement::~VisitorManagement() {
@@ -15,8 +16,19 @@ VisitorManagement::~VisitorManagement() {
     }
 }
 
-void VisitorManagement::Add(int id, const string& name, const string& purpose, const string& date) {
-    Visitor* newVisitor = new Visitor{ id, name, purpose, date, head };
+void VisitorManagement::Add(int visitorID, const string& name, const string& address,
+                            const string& cnic, const string& contactNumber,
+                            int studentID, const string& visitDate) {
+    if (!studentManager->exists(studentID)) {
+        cout << "Error: Student with ID " << studentID << " does not exist.\n";
+        return;
+    }
+
+    Student* student = studentManager->getStudent(studentID);
+string studentName = student ? student->studentName : "Unknown";
+
+    Visitor* newVisitor = new Visitor{visitorID, name, address, cnic, contactNumber,
+                                      visitDate, studentID, studentName, head};
     head = newVisitor;
     cout << "Visitor added successfully.\n";
 }
@@ -40,13 +52,27 @@ bool VisitorManagement::Delete(int id) {
     return false;
 }
 
-bool VisitorManagement::Update(int id, const string& name, const string& purpose, const string& date) {
+bool VisitorManagement::Update(int visitorID, const string& name, const string& address,
+                               const string& cnic, const string& contactNumber,
+                               int studentID, const string& visitDate) {
     Visitor* current = head;
     while (current != nullptr) {
-        if (current->visitorID == id) {
+        if (current->visitorID == visitorID) {
+            if (!studentManager->exists(studentID)) {
+                cout << "Error: Student with ID " << studentID << " does not exist.\n";
+                return false;
+            }
+
+            Student* student = studentManager->getStudent(studentID);
+string studentName = student ? student->studentName : "Unknown";
+
             current->name = name;
-            current->purpose = purpose;
-            current->visitDate = date;
+            current->address = address;
+            current->cnic = cnic;
+            current->contactNumber = contactNumber;
+            current->studentID = studentID;
+            current->studentName = studentName;
+            current->visitDate = visitDate;
             cout << "Visitor updated.\n";
             return true;
         }
@@ -63,8 +89,12 @@ bool VisitorManagement::Search(int id) {
             cout << "Visitor Found:\n";
             cout << "ID: " << current->visitorID
                  << "\nName: " << current->name
-                 << "\nPurpose: " << current->purpose
-                 << "\nDate: " << current->visitDate << "\n";
+                 << "\nAddress: " << current->address
+                 << "\nCNIC: " << current->cnic
+                 << "\nContact Number: " << current->contactNumber
+                 << "\nVisit Date: " << current->visitDate
+                 << "\nStudent Name: " << current->studentName
+                 << "\nStudent ID: " << current->studentID << "\n";
             return true;
         }
         current = current->next;
@@ -83,8 +113,13 @@ void VisitorManagement::View() {
     while (current != nullptr) {
         cout << "\nVisitor ID: " << current->visitorID
              << "\nName: " << current->name
-             << "\nPurpose: " << current->purpose
-             << "\nVisit Date: " << current->visitDate << "\n";
+             << "\nAddress: " << current->address
+             << "\nCNIC: " << current->cnic
+             << "\nContact Number: " << current->contactNumber
+             << "\nVisit Date: " << current->visitDate
+             << "\nStudent Name: " << current->studentName
+             << "\nStudent ID: " << current->studentID
+             << "\n--------------------------";
         current = current->next;
     }
 }
