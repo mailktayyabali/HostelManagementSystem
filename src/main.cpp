@@ -83,7 +83,10 @@ int main() {
                         }
                         case 2: {
                             int id = getValidatedInt("Enter Student ID to delete: ");
-                            
+                            if (!sm.exists(id)) {
+                                cout << "Student not found!\n";
+                                break;
+                            }
                             sm.deleteStudent(id);
                             sm.deleteStudentFromFile("students.json",id);
                             break;
@@ -151,7 +154,7 @@ int main() {
                             int totalFee = getValidatedInt("Enter Total Fee: ");
                             int paidFee = getValidatedInt("Enter Paid Fee: ");
                             int securityFee = getValidatedInt("Enter Security Fee: ");
-                            string date = getValidatedString("Enter Date (YYYY-MM-DD): ");
+                            string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
                             fm.Add(studentId, totalFee, paidFee, securityFee, date);
                             break;
                         }
@@ -173,7 +176,7 @@ int main() {
                             int totalFee = getValidatedInt("Enter New Total Fee: ");
                             int paidFee = getValidatedInt("Enter New Paid Fee: ");
                             int securityFee = getValidatedInt("Enter New Security Fee: ");
-                            string date = getValidatedString("Enter New Date (YYYY-MM-DD): ");
+                            string date = getValidatedDate("Enter New Date (DD-MM-YYYY): ");
                             fm.Update(studentId, totalFee, paidFee, securityFee, date);
                             break;
                         }
@@ -226,7 +229,7 @@ int main() {
                     switch (choice) {
                         case 1: {
                             int studentId = getValidatedInt("Enter Student ID: ");
-                            string date = getValidatedString("Enter Date (YYYY-MM-DD): ");
+                            string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
                             string meal = getValidatedString("Enter Meal Type (breakfast/lunch/dinner): ");
                             mam.Enqueue(studentId, date, meal);
                             break;
@@ -362,9 +365,9 @@ int main() {
                                    cout << "Student ID does not exist. Visitor cannot be added.\n";
                                    break;
                                }
-                           string name = getValidatedString("Enter Visitor Name: ");
+                            string name = getValidatedString("Enter Visitor Name: ");
                             string purpose = getValidatedString("Enter Purpose of Visit: ");
-                            string date = getValidatedString("Enter Visit Date (YYYY-MM-DD): ");
+                            string date = getValidatedDate("Enter Visit Date (DD-MM-YYYY): ");
                             vm.Add(studentID, name, purpose, date);
                             break;
                         }
@@ -377,7 +380,7 @@ int main() {
                             int visitorID = getValidatedInt("Enter Visitor ID to update: ");
                             string newName = getValidatedString("Enter New Name: ");
                             string newPurpose = getValidatedString("Enter New Purpose: ");
-                            string newDate = getValidatedString("Enter New Date (YYYY-MM-DD): ");
+                            string newDate = getValidatedDate("Enter New Date (DD-MM-YYYY): ");
                             vm.Update(visitorID, newName, newPurpose, newDate);
                             break;
                         }
