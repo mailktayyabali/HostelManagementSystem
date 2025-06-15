@@ -19,6 +19,7 @@ int main() {
     int mainChoice;
     room.loadRoomsFromFile("rooms.json"); // Load rooms from file at startup
     sm.loadStudentsFromFile("students.json"); // Load students from file at startup
+    fm.loadFeesFromFile("fees.json"); // Load fees from file at startup
 
     do {
         system("cls");
@@ -153,41 +154,50 @@ int main() {
                             int securityFee = getValidatedInt("Enter Security Fee: ");
                             string date = getValidatedString("Enter Date (YYYY-MM-DD): ");
                             fm.Add(studentId, totalFee, paidFee, securityFee, date);
+                            fm.saveFeesToFile("fees.json"); // Save fees to file after adding
                             break;
                         }
                         case 2: {
                             int studentId = getValidatedInt("Enter Student ID to delete fee record: ");
-                            if (!sm.exists(studentId)) {
-                                cout << "Student not found!\n";
-                                break;
+                            while(!sm.exists(studentId)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                studentId = getValidatedInt("");
                             }
-                            fm.Delete(studentId);
+                            if (fm.Delete(studentId)) {
+                                fm.deleteFeeFromFile("fees.json", studentId); // Delete from file
+                            }
                             break;
                         }
                         case 3: {
                             int studentId = getValidatedInt("Enter Student ID to update fee record: ");
-                            if (!sm.exists(studentId)) {
-                                cout << "Student not found!\n";
-                                break;
+                            while(!sm.exists(studentId)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                studentId = getValidatedInt("");
                             }
                             int totalFee = getValidatedInt("Enter New Total Fee: ");
                             int paidFee = getValidatedInt("Enter New Paid Fee: ");
                             int securityFee = getValidatedInt("Enter New Security Fee: ");
                             string date = getValidatedString("Enter New Date (YYYY-MM-DD): ");
                             fm.Update(studentId, totalFee, paidFee, securityFee, date);
+                            fm.updateFeeInFile("fees.json", studentId); // Update in file
                             break;
                         }
                         case 4: {
                             int studentId = getValidatedInt("Enter Student ID to search fee record: ");
-                            if (!sm.exists(studentId)) {
-                                cout << "Student not found!\n";
-                                break;
+                            while(!sm.exists(studentId)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                studentId = getValidatedInt("");
                             }
+
                             fm.Search(studentId);
                             break;
                         }
                         case 5: {
                             int studentId = getValidatedInt("Enter Student ID to check due amount: ");
+                            while(!sm.exists(studentId)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                studentId = getValidatedInt("");
+                            }
                             fm.CheckDue(studentId);
                             break;
                         }

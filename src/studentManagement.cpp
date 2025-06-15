@@ -14,7 +14,7 @@ void StudentManagement::addStudent(Student* student) {
     students[student->studentId] = student;
     cout << "Student added successfully!" << endl;
 
-    system("cls"); // For Linux/macOS: system("clear");
+    system("cls"); 
 }
 
 // Delete student
