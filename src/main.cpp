@@ -3,6 +3,7 @@
 #include "FeeManagement.h"
 #include "MessAttendanceManagement.h"
 #include "Room.h"
+#include "VisitorManagement.h"
 #include "Validate.h"
 #include <cstdlib>
 
@@ -13,9 +14,11 @@ int main() {
     FeeManagement fm(&sm);  
     MessAttendanceManagement mam(&sm);
     RoomManagement room(sm);
+    VisitorManagement vm(&sm);
 
     int mainChoice;
     room.loadRoomsFromFile("rooms.json"); // Load rooms from file at startup
+    sm.loadStudentsFromFile("students.json"); // Load students from file at startup
 
     do {
         system("cls");
@@ -40,7 +43,6 @@ int main() {
             case 1: {
                 int choice;
                 do {
-                    
                     cout << "\n--- Student Management Menu ---\n";
                     cout << "1. Add Student\n";
                     cout << "2. Delete Student\n";
@@ -333,65 +335,69 @@ int main() {
                 break;
             }
 
-            // case 5: {
-            //     int choice;
-            //     do {
-            //         cout << "\n-- Visitor Management Menu --\n";
-            //         cout << "1. Add Visitor\n";
-            //         cout << "2. Delete Visitor\n";
-            //         cout << "3. Update Visitor\n";
-            //         cout << "4. Search Visitor by ID\n";
-            //         cout << "5. View All Visitors\n";
-            //         cout << "6. Back to Main Menu\n";
-            //         cout << "Enter your choice: ";
-            //         cin >> choice;
+            case 5: {
+                int choice;
+                do {
+                    cout << "\n-- Visitor Management Menu --\n";
+                    cout << "1. Add Visitor\n";
+                    cout << "2. Delete Visitor\n";
+                    cout << "3. Update Visitor\n";
+                    cout << "4. Search Visitor by ID\n";
+                    cout << "5. View All Visitors\n";
+                    cout << "6. Back to Main Menu\n";
+                    cout << "Enter your choice: ";
+                    cin >> choice;
 
-            //         if (cin.fail()) {
-            //             cin.clear();
-            //             cin.ignore(1000, '\n');
-            //             cout << "Invalid input! Try again.\n";
-            //             continue;
-            //         }
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                        cout << "Invalid input! Try again.\n";
+                        continue;
+                    }
 
-            //         switch (choice) {
-            //             case 1: {
-            //                 int id = getValidatedInt("Enter Visitor ID: ");
-            //                 string name = getValidatedString("Enter Visitor Name: ");
-            //                 string purpose = getValidatedString("Enter Purpose of Visit: ");
-            //                 string date = getValidatedString("Enter Visit Date (YYYY-MM-DD): ");
-            //                 vm.Add(id, name, purpose, date);
-            //                 break;
-            //             }
-            //             case 2: {
-            //                 int id = getValidatedInt("Enter Visitor ID to delete: ");
-            //                 vm.Delete(id);
-            //                 break;
-            //             }
-            //             case 3: {
-            //                 int id = getValidatedInt("Enter Visitor ID to update: ");
-            //                 string name = getValidatedString("Enter New Name: ");
-            //                 string purpose = getValidatedString("Enter New Purpose: ");
-            //                 string date = getValidatedString("Enter New Date (YYYY-MM-DD): ");
-            //                 vm.Update(id, name, purpose, date);
-            //                 break;
-            //             }
-            //             case 4: {
-            //                 int id = getValidatedInt("Enter Visitor ID to search: ");
-            //                 vm.Search(id);
-            //                 break;
-            //             }
-            //             case 5:
-            //                 vm.View();
-            //                 break;
-            //             case 6:
-            //                 cout << "Returning to main menu...\n";
-            //                 break;
-            //             default:
-            //                 cout << "Invalid choice. Try again.\n";
-            //         }
-            //     } while (choice != 6);
-            //     break;
-            // }
+                   switch (choice) {
+                       case 1: {
+                           int studentID = getValidatedInt("Enter Student ID: ");
+                               if(!sm.exists(studentID)){
+                                   cout << "Student ID does not exist. Visitor cannot be added.\n";
+                                   break;
+                               }
+                           string name = getValidatedString("Enter Visitor Name: ");
+                            string purpose = getValidatedString("Enter Purpose of Visit: ");
+                            string date = getValidatedString("Enter Visit Date (YYYY-MM-DD): ");
+                            vm.Add(studentID, name, purpose, date);
+                            break;
+                        }
+                         case 2: {
+                            int visitorID = getValidatedInt("Enter Visitor ID to delete: ");
+                            vm.Delete(visitorID);
+                            break;
+                        }
+                        case 3: {
+                            int visitorID = getValidatedInt("Enter Visitor ID to update: ");
+                            string newName = getValidatedString("Enter New Name: ");
+                            string newPurpose = getValidatedString("Enter New Purpose: ");
+                            string newDate = getValidatedString("Enter New Date (YYYY-MM-DD): ");
+                            vm.Update(visitorID, newName, newPurpose, newDate);
+                            break;
+                        }
+                        case 4: {
+                            int visitorID = getValidatedInt("Enter Visitor ID to search: ");
+                            vm.Search(visitorID);
+                            break;
+                        }
+                        case 5:
+                            vm.View();
+                            break;
+                        case 6:
+                            cout << "Returning to main menu...\n";
+                            break;
+                        default:
+                            cout << "Invalid choice. Try again.\n";
+                    }
+                } while (choice != 6);
+                    break;
+            }
 
             case 6:
                 cout << "Exiting Program... Goodbye!\n";

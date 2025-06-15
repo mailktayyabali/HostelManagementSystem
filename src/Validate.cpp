@@ -52,3 +52,15 @@ string getValidatedPhone(const string& prompt) {
         cout << "Invalid phone number. Must start with 03 and have 11 digits total.\n";
     }
 }
+
+std::string getValidatedDate(const std::string& prompt) {
+    std::string date;
+    // Match formats like 01-01-2025 or 31-12-2023
+    std::regex pattern(R"(^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(20\d{2})$)");
+    while (true) {
+        std::cout << prompt;
+        std::getline(std::cin, date);  // no cin.ignore() here
+        if (regex_match(date, pattern)) return date;
+        std::cout << "Invalid date format. Please use DD-MM-YYYY (e.g., 15-06-2025).\n";
+    }
+}
