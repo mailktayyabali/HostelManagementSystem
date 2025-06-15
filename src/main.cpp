@@ -20,6 +20,7 @@ int main() {
     room.loadRoomsFromFile("rooms.json"); // Load rooms from file at startup
     sm.loadStudentsFromFile("students.json"); // Load students from file at startup
     fm.loadFeesFromFile("fees.json"); // Load fees from file at startup
+    vm.loadVisitorsFromFile("visitors.json"); // Load visitors from file at startup
 
     do {
         system("cls");
@@ -368,27 +369,38 @@ int main() {
                    switch (choice) {
                        case 1: {
                            int studentID = getValidatedInt("Enter Student ID: ");
-                               if(!sm.exists(studentID)){
-                                   cout << "Student ID does not exist. Visitor cannot be added.\n";
-                                   break;
-                               }
+                            while (!sm.exists(studentID)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                studentID = getValidatedInt("");
+                            }
                            string name = getValidatedString("Enter Visitor Name: ");
                             string purpose = getValidatedString("Enter Purpose of Visit: ");
                             string date = getValidatedString("Enter Visit Date (YYYY-MM-DD): ");
                             vm.Add(studentID, name, purpose, date);
+                            vm.saveVisitorsToFile("visitors.json"); // Save visitors to file after adding
                             break;
                         }
                          case 2: {
                             int visitorID = getValidatedInt("Enter Visitor ID to delete: ");
+                            while (!vm.exists(visitorID)) {
+                                cout << "Visitor not found! Please enter a valid Visitor ID: ";
+                                visitorID = getValidatedInt("");
+                            }
                             vm.Delete(visitorID);
+                            vm.deleteVisitorFromFile("visitors.json", visitorID); // Delete from file
                             break;
                         }
                         case 3: {
                             int visitorID = getValidatedInt("Enter Visitor ID to update: ");
+                            while (!vm.exists(visitorID)) {
+                                cout << "Visitor not found! Please enter a valid Visitor ID: ";
+                                visitorID = getValidatedInt("");
+                            }
                             string newName = getValidatedString("Enter New Name: ");
                             string newPurpose = getValidatedString("Enter New Purpose: ");
                             string newDate = getValidatedString("Enter New Date (YYYY-MM-DD): ");
                             vm.Update(visitorID, newName, newPurpose, newDate);
+                            vm.updateVisitorInFile("visitors.json", visitorID); // Update in file
                             break;
                         }
                         case 4: {
