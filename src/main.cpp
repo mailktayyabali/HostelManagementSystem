@@ -21,6 +21,7 @@ int main() {
     sm.loadStudentsFromFile("students.json"); // Load students from file at startup
     fm.loadFeesFromFile("fees.json"); // Load fees from file at startup
     vm.loadVisitorsFromFile("visitors.json"); // Load visitors from file at startup
+    mam.loadAttendanceFromFile("attendance.json"); // Load attendance from file at startup
 
     do {
         system("cls");
@@ -237,9 +238,14 @@ int main() {
                     switch (choice) {
                         case 1: {
                             int studentId = getValidatedInt("Enter Student ID: ");
+                            while (!sm.exists(studentId)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                studentId = getValidatedInt("");
+                            }
                             string date = getValidatedString("Enter Date (YYYY-MM-DD): ");
                             string meal = getValidatedString("Enter Meal Type (breakfast/lunch/dinner): ");
                             mam.Enqueue(studentId, date, meal);
+                            mam.saveAttendanceToFile("attendance.json"); // Save attendance to file after adding
                             break;
                         }
                         case 2:

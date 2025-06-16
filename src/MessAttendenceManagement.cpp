@@ -1,4 +1,6 @@
 #include "MessAttendanceManagement.h"
+#include <fstream>
+#include <iomanip>
 
 MessAttendanceManagement::MessAttendanceManagement(StudentManagement* sm) {
     front = rear = nullptr;
@@ -84,5 +86,82 @@ void MessAttendanceManagement::Search(int studentId) {
 
     if (!found) {
         cout << "❌ No attendance found for Student ID " << studentId << ".\n";
+    }
+}
+
+// ✅ File Handling Implementation
+
+void MessAttendanceManagement::saveAttendanceToFile(const string& filename) {
+    json jArray = json::array();
+
+    AttendanceNode* current = front;
+    while (current != nullptr) {
+        jArray.push_back(current->toJson());
+        current = current->next;
+    }
+
+    ofstream outFile(filename);
+    if (outFile.is_open()) {
+        outFile << setw(4) << jArray;
+        outFile.close();
+        cout << "💾 Attendance saved to " << filename << endl;
+    } else {
+        cout << "❌ Failed to save attendance to file.\n";
+    }
+}
+
+void MessAttendanceManagement::loadAttendanceFromFile(const string& filename) {
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        cout << "❌ Unable to open file: " << filename << endl;
+        return;
+    }
+
+    json jArray;
+    inFile >> jArray;
+    inFile.close();
+
+    front = rear = nullptr;
+
+    for (const auto& j : jArray) {
+        AttendanceNode* newNode = new AttendanceNode(0, "", "");
+        newNode->fromJson(j);
+
+        if (rear == nullptr) {
+            front = rear = newNode;
+        } else {
+            rear->next = newNode;
+            rear = newNode;
+        }
+    }
+
+    cout << "📂 Attendance loaded from " << filename << endl;
+}
+
+void MessAttendanceManagement::deleteAttendanceFromFile(const string& filename, int studentId, const string& date) {
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        cout << "❌ Unable to open file: " << filename << endl;
+        return;
+    }
+
+    json jArray;
+    inFile >> jArray;
+    inFile.close();
+
+    json updatedArray = json::array();
+    for (const auto& j : jArray) {
+        if (j["studentId"] != studentId || j["date"] != date) {
+            updatedArray.push_back(j);
+        }
+    }
+
+    ofstream outFile(filename);
+    if (outFile.is_open()) {
+        outFile << setw(4) << updatedArray;
+        outFile.close();
+        cout << "🧹 Deleted attendance for Student ID " << studentId << " on " << date << " from file.\n";
+    } else {
+        cout << "❌ Failed to write to file during delete.\n";
     }
 }
