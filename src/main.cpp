@@ -86,7 +86,10 @@ int main() {
                         }
                         case 2: {
                             int id = getValidatedInt("Enter Student ID to delete: ");
-                            
+                            if (!sm.exists(id)) {
+                                cout << "Student not found!\n";
+                                break;
+                            }
                             sm.deleteStudent(id);
                             sm.deleteStudentFromFile("students.json",id);
                             break;
@@ -154,7 +157,7 @@ int main() {
                             int totalFee = getValidatedInt("Enter Total Fee: ");
                             int paidFee = getValidatedInt("Enter Paid Fee: ");
                             int securityFee = getValidatedInt("Enter Security Fee: ");
-                            string date = getValidatedString("Enter Date (YYYY-MM-DD): ");
+                            string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
                             fm.Add(studentId, totalFee, paidFee, securityFee, date);
                             fm.saveFeesToFile("fees.json"); // Save fees to file after adding
                             break;
@@ -179,7 +182,7 @@ int main() {
                             int totalFee = getValidatedInt("Enter New Total Fee: ");
                             int paidFee = getValidatedInt("Enter New Paid Fee: ");
                             int securityFee = getValidatedInt("Enter New Security Fee: ");
-                            string date = getValidatedString("Enter New Date (YYYY-MM-DD): ");
+                            string date = getValidatedDate("Enter New Date (DD-MM-YYYY): ");
                             fm.Update(studentId, totalFee, paidFee, securityFee, date);
                             fm.updateFeeInFile("fees.json", studentId); // Update in file
                             break;
@@ -238,6 +241,7 @@ int main() {
                     switch (choice) {
                         case 1: {
                             int studentId = getValidatedInt("Enter Student ID: ");
+                            string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
                             while (!sm.exists(studentId)) {
                                 cout << "Student not found! Please enter a valid Student ID: ";
                                 studentId = getValidatedInt("");
@@ -381,7 +385,7 @@ int main() {
                             }
                            string name = getValidatedString("Enter Visitor Name: ");
                             string purpose = getValidatedString("Enter Purpose of Visit: ");
-                            string date = getValidatedString("Enter Visit Date (YYYY-MM-DD): ");
+                            string date = getValidatedDate("Enter Visit Date (DD-MM-YYYY): ");
                             vm.Add(studentID, name, purpose, date);
                             vm.saveVisitorsToFile("visitors.json"); // Save visitors to file after adding
                             break;
@@ -404,7 +408,7 @@ int main() {
                             }
                             string newName = getValidatedString("Enter New Name: ");
                             string newPurpose = getValidatedString("Enter New Purpose: ");
-                            string newDate = getValidatedString("Enter New Date (YYYY-MM-DD): ");
+                            string newDate = getValidatedDate("Enter New Date (DD-MM-YYYY): ");
                             vm.Update(visitorID, newName, newPurpose, newDate);
                             vm.updateVisitorInFile("visitors.json", visitorID); // Update in file
                             break;
