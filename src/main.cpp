@@ -5,11 +5,29 @@
 #include "Room.h"
 #include "VisitorManagement.h"
 #include "Validate.h"
+#include "LoginSystem.h"
 #include <cstdlib>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
 int main() {
+    LoginSystem auth;
+    if (!auth.adminExists()) {
+    cout << " No admin found. Please register first.\n";
+    auth.registerAdmin();
+    }
+    bool loggedIn = false;
+    for (int i = 0; i < 3 && !loggedIn; ++i) {
+        loggedIn = auth.login();
+        if (!loggedIn) cout << "Try again...\n";
+    }
+    if (!loggedIn) {
+    cout << " Too many failed attempts. Exiting...\n";
+    return 0;
+    }
+
     StudentManagement sm;
     FeeManagement fm(&sm);  
     MessAttendanceManagement mam(&sm);
@@ -76,6 +94,10 @@ int main() {
                             }
                             Student* newStudent = new Student();
                             newStudent->studentId = studentId;
+                            while (sm.exists(newStudent->studentId)) {
+                                cout << "This ID already exists! Please enter a different ID.\n";
+                                newStudent->studentId = getValidatedInt("Enter ID: ");
+                            }
                             newStudent->studentName = getValidatedString("Enter Name: ");
                             newStudent->CNIC = getValidatedCNIC("Enter CNIC (e.g., 12345-1234567-1): ");
                             newStudent->studentAddress = getValidatedString("Enter Address: ");
@@ -86,9 +108,9 @@ int main() {
                         }
                         case 2: {
                             int id = getValidatedInt("Enter Student ID to delete: ");
-                            if (!sm.exists(id)) {
-                                cout << "Student not found!\n";
-                                break;
+                            while (!sm.exists(id)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                id = getValidatedInt("");
                             }
                             sm.deleteStudent(id);
                             sm.deleteStudentFromFile("students.json",id);
@@ -96,9 +118,9 @@ int main() {
                         }
                         case 3: {
                             int id = getValidatedInt("Enter Student ID to update: ");
-                            if (!sm.exists(id)) {
-                                cout << "Student not found!\n";
-                                break;
+                            while (!sm.exists(id)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                id = getValidatedInt("");
                             }
                             Student* updatedStudent = new Student();
                             updatedStudent->studentId = id;
@@ -241,12 +263,11 @@ int main() {
                     switch (choice) {
                         case 1: {
                             int studentId = getValidatedInt("Enter Student ID: ");
-                            string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
                             while (!sm.exists(studentId)) {
                                 cout << "Student not found! Please enter a valid Student ID: ";
                                 studentId = getValidatedInt("");
                             }
-                            string date = getValidatedString("Enter Date (YYYY-MM-DD): ");
+                            string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
                             string meal = getValidatedString("Enter Meal Type (breakfast/lunch/dinner): ");
                             mam.Enqueue(studentId, date, meal);
                             mam.saveAttendanceToFile("attendance.json"); // Save attendance to file after adding
