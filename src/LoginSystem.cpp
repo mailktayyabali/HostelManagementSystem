@@ -2,8 +2,21 @@
 
 bool LoginSystem::adminExists() {
     ifstream file(filename);
-    return file.good() && file.peek() != ifstream::traits_type::eof(); // check if file exists and is not empty
+    if (!file.is_open()) return false;
+
+    json adminData;
+    try {
+        file >> adminData;
+    } catch (...) {
+        return false;  // JSON parsing failed
+    }
+
+    // Check if both keys exist and are not empty
+    return adminData.contains("username") && adminData.contains("password") &&
+           !adminData["username"].get<string>().empty() &&
+           !adminData["password"].get<string>().empty();
 }
+
 
 void LoginSystem::registerAdmin() {
     string username, password;

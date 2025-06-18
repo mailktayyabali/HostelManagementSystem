@@ -33,16 +33,16 @@ for /R %%f in (%SRCDIR%\*.cpp %DBDIR%\*.cpp) do (
 )
 
 :: Link all object files
-echo [📦] Linking...
+echo [] Linking...
 g++ -std=c++17 %OUTDIR%\*.o -o %EXE%
 
 if %errorlevel% neq 0 (
-    echo [❌] Linking failed!
+    echo [] Linking failed!
     pause
     exit /b %errorlevel%
 )
 
-echo [🚀] Build successful. Running: hostelManagement.exe
+echo [] Build successful. Running: hostelManagement.exe
 echo --------------------------------------------------
 
 %EXE%
