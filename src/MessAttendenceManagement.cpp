@@ -95,6 +95,41 @@ void MessAttendanceManagement::DeleteByStudentId(int studentId) {
     }
 }
 
+void MessAttendanceManagement::DeleteByDateAndMeal(int studentId, const string& date, const string& mealType) {
+    if (front == nullptr) {
+        cout << "No attendance records to delete.\n";
+        return;
+    }
+
+    AttendanceNode* current = front;
+    AttendanceNode* prev = nullptr;
+    bool deleted = false;
+
+    while (current != nullptr) {
+        if (current->studentId == studentId && current->date == date && current->mealType == mealType) {
+            if (current == front) {
+                front = front->next;
+                if (current == rear) rear = nullptr;
+                delete current;
+            } else {
+                prev->next = current->next;
+                if (current == rear) rear = prev;
+                delete current;
+            }
+            deleted = true;
+            cout << "Attendance deleted for Student ID " << studentId
+                 << " on " << date << " for " << mealType << ".\n";
+            break;
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    if (!deleted) {
+        cout << "No matching attendance found for deletion.\n";
+    }
+}
+
 void MessAttendanceManagement::Search(int studentId) {
     AttendanceNode* temp = front;
     bool found = false;

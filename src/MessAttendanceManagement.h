@@ -45,6 +45,7 @@ public:
     void Enqueue(int studentId, string date, string mealType);
     void Dequeue();
     void DeleteByStudentId(int studentId);
+    void DeleteByDateAndMeal(int studentId, const string& date, const string& mealType);
     void Search(int studentId);
     void ViewAll();
 

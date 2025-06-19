@@ -43,7 +43,11 @@ int main() {
     
     do {        
         system("cls");
-        cout << "\n===== Hostel Management System =====\n";
+        cout << "=======================================================================\n";
+        cout << "                     HOSTEL MANAGEMENT SYSTEM\n";  
+        cout << "=======================================================================\n";
+        cout << "Welcome to the Hostel Management System!\n";
+        
         cout << "1. Student Management\n";
         cout << "2. Fee Management\n";
         cout << "3. Mess Attendance Management\n";
@@ -265,16 +269,14 @@ case 2: {
                 cout << "Invalid choice. Try again.\n";
         }
     } while (choice != 7);
-
-    return 0;
+        break;
 }
-
             case 3: {
                 int choice;
                 do {
                     cout << "\n-- Mess Attendance Management Menu --\n";
                     cout << "1. Add Attendance\n";
-                    cout << "2. Delete Attendance by Student ID\n";
+                    cout << "2. Delete Attendance\n";
                     cout << "3. View All Attendance\n";
                     cout << "4. Search Attendance by Student ID\n";
                     cout << "5. Back to Main Menu\n";
@@ -310,12 +312,43 @@ case 2: {
                             break;
                         }
                         case 2: {
-                            int id = getValidatedInt("Enter Student ID to delete attendance records: ");
-                            while (!sm.exists(id)) {
-                                cout << "Student not found! Please enter a valid Student ID: ";
-                                id = getValidatedInt("");
+                            int subChoice;
+                            cout << "\n-- Delete Attendance --\n";
+                            cout << "1. Delete by Student ID\n";
+                            cout << "2. Delete by Student ID + Date + Meal Type\n";
+                            cout << "Enter your choice: ";
+                            cin >> subChoice;
+                            if (cin.fail()) {
+                                cin.clear();
+                                cin.ignore(1000, '\n');
+                                cout << "Invalid input! Try again.\n";
+                                continue;
                             }
-                            mam.DeleteByStudentId(id);
+
+                            if (subChoice ==1) {
+                                int id = getValidatedInt("Enter Student ID to delete attendance: ");
+                                while (!sm.exists(id)) {
+                                    cout << "Student not found! Please enter a valid Student ID: ";
+                                    id = getValidatedInt("");
+                                }
+                                mam.DeleteByStudentId(id);
+                            } else if (subChoice == 2) {
+                                int id = getValidatedInt("Enter Student ID: ");
+                                while (!sm.exists(id)) {
+                                    cout << "Student not found! Please enter a valid Student ID: ";
+                                    id = getValidatedInt("");
+                                }
+                                string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
+                                string meal;
+                                while (true) {
+                                    meal = getValidatedString("Enter Meal Type (breakfast/lunch/dinner): ");
+                                    if (meal == "breakfast" || meal == "lunch" || meal == "dinner") break;
+                                    cout << "Invalid meal type! Use breakfast/lunch/dinner.\n";
+                                }
+                                mam.DeleteByDateAndMeal(id, date, meal);
+                            } else {
+                                cout << "Invalid deletion option!\n";
+                            }
                             break;
                         }
                         case 3:
@@ -497,7 +530,6 @@ case 2: {
                 } while (choice != 6);
                     break;
             }
-
             case 6:
                 cout << "Exiting Program... Goodbye!\n";
                 break;
