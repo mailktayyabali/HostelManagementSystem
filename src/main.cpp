@@ -39,7 +39,7 @@ int main() {
     sm.loadStudentsFromFile("students.json"); // Load students from file at startup
     fm.loadFeesFromFile("fees.json"); // Load fees from file at startup
     vm.loadVisitorsFromFile("visitors.json"); // Load visitors from file at startup
-    mam.loadAttendanceFromFile("attendance.json"); // Load attendance from file at startup
+    // mam.loadAttendanceFromFile("attendance.json"); // Load attendance from file at startup
 
     do {
         system("cls");
@@ -244,9 +244,9 @@ int main() {
             case 3: {
                 int choice;
                 do {
-                    cout << "\n-- Mess Attendance Menu --\n";
+                    cout << "\n-- Mess Attendance Management Menu --\n";
                     cout << "1. Add Attendance\n";
-                    cout << "2. Delete Attendance\n";
+                    cout << "2. Delete Attendance by Student ID\n";
                     cout << "3. View All Attendance\n";
                     cout << "4. Search Attendance by Student ID\n";
                     cout << "5. Back to Main Menu\n";
@@ -268,14 +268,24 @@ int main() {
                                 studentId = getValidatedInt("");
                             }
                             string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
-                            string meal = getValidatedString("Enter Meal Type (breakfast/lunch/dinner): ");
+                            string meal;
+                            while (true) {
+                                meal = getValidatedString("Enter Meal Type (breakfast/lunch/dinner): ");
+                                for (auto& c : meal) c = tolower(c);
+                                if (meal == "breakfast" || meal == "lunch" || meal == "dinner") {
+                                    break;
+                                } else {
+                                    cout << "Invalid meal type! Please enter only 'breakfast', 'lunch', or 'dinner'.\n"; 
+                                }
+                            }
                             mam.Enqueue(studentId, date, meal);
-                            mam.saveAttendanceToFile("attendance.json"); // Save attendance to file after adding
                             break;
                         }
-                        case 2:
-                            mam.Dequeue();
+                        case 2: {
+                            int id = getValidatedInt("Enter Student ID to delete attendance records: ");
+                            mam.DeleteByStudentId(id);
                             break;
+                        }
                         case 3:
                             mam.ViewAll();
                             break;
@@ -288,10 +298,10 @@ int main() {
                             cout << "Returning to main menu...\n";
                             break;
                         default:
-                            cout << "Invalid choice. Try again.\n";
+                            cout << "Invalid choice. Please try again.\n";
                     }
-                } while (choice != 5);
-                break;
+                } while (choice !=5);
+                    break;
             }
 
             case 4: {

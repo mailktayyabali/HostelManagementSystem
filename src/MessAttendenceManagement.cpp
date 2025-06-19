@@ -1,6 +1,4 @@
 #include "MessAttendanceManagement.h"
-#include <fstream>
-#include <iomanip>
 
 MessAttendanceManagement::MessAttendanceManagement(StudentManagement* sm) {
     front = rear = nullptr;
@@ -15,8 +13,18 @@ MessAttendanceManagement::~MessAttendanceManagement() {
 
 void MessAttendanceManagement::Enqueue(int studentId, string date, string mealType) {
     if (!studentManager->exists(studentId)) {
-        cout << "❌ Cannot add attendance. Student ID " << studentId << " is not registered.\n";
+        cout << "Cannot add attendance. Student ID " << studentId << " is not registered.\n";
         return;
+    }
+
+    // Check if the student already has the same meal on the same date
+    AttendanceNode* temp = front;
+    while (temp != nullptr) {
+        if (temp->studentId == studentId && temp->date == date && temp->mealType == mealType) {
+            cout << "Student ID " << studentId << " has already taken " << mealType << " on " << date << ".\n";
+            return;
+        }
+        temp = temp->next;
     }
 
     AttendanceNode* newNode = new AttendanceNode(studentId, date, mealType);
@@ -28,140 +36,100 @@ void MessAttendanceManagement::Enqueue(int studentId, string date, string mealTy
         rear = newNode;
     }
 
-    cout << "✅ Attendance added for Student ID " << studentId
+    cout << "Attendance added for Student ID " << studentId
          << " on " << date << " for " << mealType << ".\n";
 }
 
 void MessAttendanceManagement::Dequeue() {
     if (front == nullptr) {
-        cout << "⚠ No attendance records to remove.\n";
+        cout << "No attendance records to remove.\n";
         return;
     }
 
     AttendanceNode* temp = front;
     front = front->next;
 
-    if (front == nullptr) {
-        rear = nullptr;
-    }
+    if (front == nullptr) rear = nullptr;
 
-    cout << "🗑 Removed attendance for Student ID " << temp->studentId
+    cout << "Removed attendance for Student ID " << temp->studentId
          << " on " << temp->date << " (" << temp->mealType << ").\n";
 
     delete temp;
 }
 
-void MessAttendanceManagement::ViewAll() {
+void MessAttendanceManagement::DeleteByStudentId(int studentId) {
     if (front == nullptr) {
-        cout << "⚠ No attendance records found.\n";
+        cout << "No attendance records.\n";
         return;
     }
 
-    AttendanceNode* temp = front;
-    cout << "\n📋 Mess Attendance Records:\n";
-    cout << "----------------------------------------\n";
-    while (temp != nullptr) {
-        cout << "Student ID: " << temp->studentId
-             << " | Date: " << temp->date
-             << " | Meal: " << temp->mealType << endl;
-        temp = temp->next;
+    AttendanceNode* curr = front;
+    AttendanceNode* prev = nullptr;
+    bool found = false;
+
+    while (curr != nullptr) {
+        if (curr->studentId == studentId) {
+            found = true;
+            AttendanceNode* toDelete = curr;
+
+            if (prev == nullptr) { // deleting front
+                front = curr->next;
+                if (rear == curr) rear = nullptr;
+                curr = front;
+            } else {
+                prev->next = curr->next;
+                if (rear == curr) rear = prev;
+                curr = curr->next;
+            }
+
+            delete toDelete;
+        } else {
+            prev = curr;
+            curr = curr->next;
+        }
+    }
+
+    if (found) {
+        cout << "All records for Student ID " << studentId << " deleted.\n";
+    } else {
+        cout << "No records found for Student ID " << studentId << ".\n";
     }
 }
 
 void MessAttendanceManagement::Search(int studentId) {
-    bool found = false;
     AttendanceNode* temp = front;
+    bool found = false;
 
     while (temp != nullptr) {
         if (temp->studentId == studentId) {
             if (!found) {
-                cout << "\n🔍 Attendance for Student ID " << studentId << ":\n";
+                cout << "\nAttendance for Student ID " << studentId << ":\n";
                 cout << "----------------------------------------\n";
             }
-            cout << "Date: " << temp->date << " | Meal: " << temp->mealType << endl;
+            cout << "Date: " << temp->date << " | Meal: " << temp->mealType << "\n";
             found = true;
         }
         temp = temp->next;
     }
 
     if (!found) {
-        cout << "❌ No attendance found for Student ID " << studentId << ".\n";
+        cout << "No attendance found for Student ID " << studentId << ".\n";
     }
 }
 
-// ✅ File Handling Implementation
-
-void MessAttendanceManagement::saveAttendanceToFile(const string& filename) {
-    json jArray = json::array();
-
-    AttendanceNode* current = front;
-    while (current != nullptr) {
-        jArray.push_back(current->toJson());
-        current = current->next;
-    }
-
-    ofstream outFile(filename);
-    if (outFile.is_open()) {
-        outFile << setw(4) << jArray;
-        outFile.close();
-        cout << "💾 Attendance saved to " << filename << endl;
-    } else {
-        cout << "❌ Failed to save attendance to file.\n";
-    }
-}
-
-void MessAttendanceManagement::loadAttendanceFromFile(const string& filename) {
-    ifstream inFile(filename);
-    if (!inFile.is_open()) {
-        cout << "❌ Unable to open file: " << filename << endl;
+void MessAttendanceManagement::ViewAll() {
+    if (front == nullptr) {
+        cout << "No attendance records found.\n";
         return;
     }
 
-    json jArray;
-    inFile >> jArray;
-    inFile.close();
-
-    front = rear = nullptr;
-
-    for (const auto& j : jArray) {
-        AttendanceNode* newNode = new AttendanceNode(0, "", "");
-        newNode->fromJson(j);
-
-        if (rear == nullptr) {
-            front = rear = newNode;
-        } else {
-            rear->next = newNode;
-            rear = newNode;
-        }
-    }
-
-    cout << "📂 Attendance loaded from " << filename << endl;
-}
-
-void MessAttendanceManagement::deleteAttendanceFromFile(const string& filename, int studentId, const string& date) {
-    ifstream inFile(filename);
-    if (!inFile.is_open()) {
-        cout << "❌ Unable to open file: " << filename << endl;
-        return;
-    }
-
-    json jArray;
-    inFile >> jArray;
-    inFile.close();
-
-    json updatedArray = json::array();
-    for (const auto& j : jArray) {
-        if (j["studentId"] != studentId || j["date"] != date) {
-            updatedArray.push_back(j);
-        }
-    }
-
-    ofstream outFile(filename);
-    if (outFile.is_open()) {
-        outFile << setw(4) << updatedArray;
-        outFile.close();
-        cout << "🧹 Deleted attendance for Student ID " << studentId << " on " << date << " from file.\n";
-    } else {
-        cout << "❌ Failed to write to file during delete.\n";
+    AttendanceNode* temp = front;
+    cout << "\nMess Attendance Records:\n";
+    cout << "----------------------------------------\n";
+    while (temp != nullptr) {
+        cout << "Student ID: " << temp->studentId
+             << " | Date: " << temp->date
+             << " | Meal: " << temp->mealType << endl;
+        temp = temp->next;
     }
 }

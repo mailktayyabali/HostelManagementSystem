@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-echo [🔧] Compiling project with smart rebuild...
+echo  Compiling project with smart rebuild...
 
 :: Paths
 set "OUTDIR=src\build"
@@ -24,26 +24,26 @@ for /R %%f in (%SRCDIR%\*.cpp %DBDIR%\*.cpp) do (
         for %%i in (!srcfile!) do set "cppTime=%%~ti"
         for %%i in (!objfile!) do set "objTime=%%~ti"
         if "!cppTime!" GTR "!objTime!" (
-            echo [🔄] Recompiling: !srcfile!
+            echo  Recompiling: !srcfile!
             g++ -std=c++17 -c "!srcfile!" -o "!objfile!"
         ) else (
-            echo [✅] Up-to-date: !srcfile!
+            echo  Up-to-date: !srcfile!
         )
     )
 )
 
 :: Link all object files
-echo [] Linking...
+echo  Linking...
 g++ -std=c++17 %OUTDIR%\*.o -o %EXE%
 
 if %errorlevel% neq 0 (
-    echo [] Linking failed!
+    echo  Linking failed!
     pause
     exit /b %errorlevel%
 )
 
 echo [] Build successful. Running: hostelManagement.exe
 echo --------------------------------------------------
-
+cls
 %EXE%
 pause

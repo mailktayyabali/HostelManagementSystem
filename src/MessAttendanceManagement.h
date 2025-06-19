@@ -1,13 +1,11 @@
-#ifndef MESS_ATTENDANCE_MANAGEMENT_H
-#define MESS_ATTENDANCE_MANAGEMENT_H
+#ifndef MESSATTENDANCEMANAGEMENT_H
+#define MESSATTENDANCEMANAGEMENT_H
 
 #include <iostream>
 #include <string>
-#include "../Database/json.hpp"
 #include "StudentManagement.h"
 
 using namespace std;
-using json = nlohmann::json;
 
 struct AttendanceNode {
     int studentId;
@@ -15,22 +13,8 @@ struct AttendanceNode {
     string mealType;
     AttendanceNode* next;
 
-    AttendanceNode(int id, string d, string meal)
-        : studentId(id), date(d), mealType(meal), next(nullptr) {}
-
-    json toJson() const {
-        return json{
-            {"studentId", studentId},
-            {"date", date},
-            {"mealType", mealType}
-        };
-    }
-
-    void fromJson(const json& j) {
-        studentId = j.at("studentId").get<int>();
-        date = j.at("date").get<string>();
-        mealType = j.at("mealType").get<string>();
-    }
+    AttendanceNode(int id, string d, string m)
+        : studentId(id), date(d), mealType(m), next(nullptr) {}
 };
 
 class MessAttendanceManagement {
@@ -45,13 +29,9 @@ public:
 
     void Enqueue(int studentId, string date, string mealType);
     void Dequeue();
-    void ViewAll();
+    void DeleteByStudentId(int studentId); 
     void Search(int studentId);
-
-    // JSON File Handling
-    void saveAttendanceToFile(const string& filename);
-    void loadAttendanceFromFile(const string& filename);
-    void deleteAttendanceFromFile(const string& filename, int studentId, const string& date);
+    void ViewAll();
 };
 
 #endif
