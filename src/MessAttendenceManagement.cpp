@@ -17,7 +17,6 @@ void MessAttendanceManagement::Enqueue(int studentId, string date, string mealTy
         return;
     }
 
-    // Check if the student already has the same meal on the same date
     AttendanceNode* temp = front;
     while (temp != nullptr) {
         if (temp->studentId == studentId && temp->date == date && temp->mealType == mealType) {
@@ -72,7 +71,7 @@ void MessAttendanceManagement::DeleteByStudentId(int studentId) {
             found = true;
             AttendanceNode* toDelete = curr;
 
-            if (prev == nullptr) { // deleting front
+            if (prev == nullptr) {
                 front = curr->next;
                 if (rear == curr) rear = nullptr;
                 curr = front;
@@ -131,5 +130,85 @@ void MessAttendanceManagement::ViewAll() {
              << " | Date: " << temp->date
              << " | Meal: " << temp->mealType << endl;
         temp = temp->next;
+    }
+}
+
+void MessAttendanceManagement::saveToFile(const string& path) {
+    json jArray = json::array();
+    AttendanceNode* current = front;
+    while (current != nullptr) {
+        jArray.push_back(current->toJson());
+        current = current->next;
+    }
+
+    ofstream out(path);
+    if (out.is_open()) {
+        out << jArray.dump(4);
+        out.close();
+        cout << "Attendance saved to file: " << path << endl;
+    } else {
+        cout << "Failed to save attendance to file.\n";
+    }
+}
+
+void MessAttendanceManagement::loadFromFile(const string& path) {
+    ifstream in(path);
+    if (!in.is_open()) {
+        cout << "Attendance file not found.\n";
+        return;
+    }
+
+    json jArray;
+    in >> jArray;
+    in.close();
+
+    while (front != nullptr) Dequeue();
+
+    for (const auto& j : jArray) {
+        AttendanceNode* node = AttendanceNode::fromJson(j);
+        if (rear == nullptr) {
+            front = rear = node;
+        } else {
+            rear->next = node;
+            rear = node;
+        }
+    }
+
+    cout << "Attendance loaded from file: " << path << endl;
+}
+void MessAttendanceManagement::deleteFromFile(const string& path, int studentId) {
+    ifstream in(path);
+    if (!in.is_open()) {
+        cout << "⚠ Could not open file: " << path << endl;
+        return;
+    }
+
+    json jArray;
+    in >> jArray;
+    in.close();
+
+    bool found = false;
+    json updatedArray = json::array();
+
+    for (const auto& entry : jArray) {
+        if (entry["studentId"] != studentId) {
+            updatedArray.push_back(entry);
+        } else {
+            found = true;
+        }
+    }
+
+    if (!found) {
+        cout << "❌ No records found for Student ID " << studentId << " in file.\n";
+        return;
+    }
+
+    ofstream out(path);
+    if (out.is_open()) {
+        out << updatedArray.dump(4);
+        out.close();
+        cout << "Records for Student ID " << studentId << " deleted from file.\n";
+    } else {
+        cout << "Failed to write updated records to file.\n";
     }
 }

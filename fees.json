@@ -1,9 +1,10 @@
 [
     {
-        "date": "efw",
+        "date": "01-01-2023",
         "paidFee": 400,
         "securityFee": 100,
         "studentID": 100,
-        "totalFee": 600
+        "totalFee": 400
     }
+
 ]

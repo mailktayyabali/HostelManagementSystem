@@ -39,7 +39,7 @@ void LoginSystem::registerAdmin() {
     outFile << adminData.dump(4); // nicely formatted JSON
     outFile.close();
 
-    cout << "✅ Admin registered successfully!\n";
+    cout << "Admin registered successfully!\n";
 }
 
 bool LoginSystem::login() {

@@ -39,9 +39,9 @@ int main() {
     sm.loadStudentsFromFile("students.json"); // Load students from file at startup
     fm.loadFeesFromFile("fees.json"); // Load fees from file at startup
     vm.loadVisitorsFromFile("visitors.json"); // Load visitors from file at startup
-    // mam.loadAttendanceFromFile("attendance.json"); // Load attendance from file at startup
-
-    do {
+    // mam.loadAttendanceFromFile("attendance.json");// Load attendance from file at startup
+    
+    do {        
         system("cls");
         cout << "\n===== Hostel Management System =====\n";
         cout << "1. Student Management\n";
@@ -55,7 +55,6 @@ int main() {
 
         if (cin.fail()) {
             cin.clear();
-            cin.ignore(1000, '\n');
             cout << "Invalid input! Try again.\n";
             continue;
         }
@@ -146,101 +145,130 @@ int main() {
                 } while (choice != 5);
                 break;
             }
+case 2: {
+            int choice;
+    do {
+        cout << "\n-- Fee Management Menu --\n";
+        cout << "1. Add Fee Record\n";
+        cout << "2. Delete Fee Record\n";
+        cout << "3. Update Fee Record\n";
+        cout << "4. Search Fee Records by Student ID\n";
+        cout << "5. Check Due Amount\n";
+        cout << "6. View All Fee Records\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
 
-            case 2: {
-                int choice;
-                do {
-                    cout << "\n-- Fee Management Menu --\n";
-                    cout << "1. Add Fee Record\n";
-                    cout << "2. Delete Fee Record\n";
-                    cout << "3. Update Fee Record\n";
-                    cout << "4. Search Fee Record by Student ID\n";
-                    cout << "5. Check Due Amount\n";
-                    cout << "6. View All Fee Records\n";
-                    cout << "7. Back to Main Menu\n";
-                    cout << "Enter your choice: ";
-                    cin >> choice;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid input! Try again.\n";
+            continue;
+        }
 
-                    if (cin.fail()) {
-                        cin.clear();
-                        cin.ignore(1000, '\n');
-                        cout << "Invalid input! Try again.\n";
-                        continue;
-                    }
+        switch (choice) {
+            case 1: {
+                int studentId = getValidatedInt("Enter Student ID: ");
+                while (!sm.exists(studentId)) {
+                    cout << "Student not found! Please enter a valid Student ID: ";
+                    studentId = getValidatedInt("");
+                };
+                int totalFee = getValidatedInt("Enter Total Fee: ");
+                while (totalFee < 0) {
+                    cout << "Total fee cannot be negative. Please try again.\n";
+                    totalFee = getValidatedInt("Enter Total Fee: ");
+                }
+                int paidFee = getValidatedInt("Enter Paid Fee: ");
+                while (paidFee < 0 || paidFee > totalFee) {
+                    cout << "Paid fee cannot be negative or greater than total fee. Please try again.\n";
+                    paidFee = getValidatedInt("Enter Paid Fee: ");
+                }
+                int securityFee = getValidatedInt("Enter Security Fee: ");
+                while (securityFee < 0) {
+                    cout << "Security fee cannot be negative. Please try again.\n";
+                    securityFee = getValidatedInt("Enter Security Fee: ");
+                }
+                string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
 
-                    switch (choice) {
-                        case 1: {
-                            int studentId;
-                            while (true) {
-                                studentId = getValidatedInt("Enter Student ID: ");
-                                if (sm.exists(studentId)) break;
-                                cout << "Student does not exist! Please enter a valid ID.\n";
-                            }
-                            int totalFee = getValidatedInt("Enter Total Fee: ");
-                            int paidFee = getValidatedInt("Enter Paid Fee: ");
-                            int securityFee = getValidatedInt("Enter Security Fee: ");
-                            string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
-                            fm.Add(studentId, totalFee, paidFee, securityFee, date);
-                            fm.saveFeesToFile("fees.json"); // Save fees to file after adding
-                            break;
-                        }
-                        case 2: {
-                            int studentId = getValidatedInt("Enter Student ID to delete fee record: ");
-                            while(!sm.exists(studentId)) {
-                                cout << "Student not found! Please enter a valid Student ID: ";
-                                studentId = getValidatedInt("");
-                            }
-                            if (fm.Delete(studentId)) {
-                                fm.deleteFeeFromFile("fees.json", studentId); // Delete from file
-                            }
-                            break;
-                        }
-                        case 3: {
-                            int studentId = getValidatedInt("Enter Student ID to update fee record: ");
-                            while(!sm.exists(studentId)) {
-                                cout << "Student not found! Please enter a valid Student ID: ";
-                                studentId = getValidatedInt("");
-                            }
-                            int totalFee = getValidatedInt("Enter New Total Fee: ");
-                            int paidFee = getValidatedInt("Enter New Paid Fee: ");
-                            int securityFee = getValidatedInt("Enter New Security Fee: ");
-                            string date = getValidatedDate("Enter New Date (DD-MM-YYYY): ");
-                            fm.Update(studentId, totalFee, paidFee, securityFee, date);
-                            fm.updateFeeInFile("fees.json", studentId); // Update in file
-                            break;
-                        }
-                        case 4: {
-                            int studentId = getValidatedInt("Enter Student ID to search fee record: ");
-                            while(!sm.exists(studentId)) {
-                                cout << "Student not found! Please enter a valid Student ID: ";
-                                studentId = getValidatedInt("");
-                            }
-
-                            fm.Search(studentId);
-                            break;
-                        }
-                        case 5: {
-                            int studentId = getValidatedInt("Enter Student ID to check due amount: ");
-                            while(!sm.exists(studentId)) {
-                                cout << "Student not found! Please enter a valid Student ID: ";
-                                studentId = getValidatedInt("");
-                            }
-                            fm.CheckDue(studentId);
-                            break;
-                        }
-                        case 6:
-                            fm.View();
-                            break;
-                        case 7:
-                            cout << "Returning to main menu...\n";
-                            break;
-                        default:
-                            cout << "Invalid choice. Try again.\n";
-                    }
-                } while (choice != 7);  
+                if (fm.Add(studentId, totalFee, paidFee, securityFee, date)) {
+                    fm.saveFeesToFile("fees.json");
+                }
                 break;
-            }   
-            
+            }
+            case 2: {
+                int studentId = getValidatedInt("Enter Student ID: ");
+                while (!sm.exists(studentId)) {
+                    cout << "Student not found! Please enter a valid Student ID: ";
+                    studentId = getValidatedInt("");
+                }
+                string date = getValidatedDate("Enter Date (DD-MM-YYYY) to delete: ");
+
+                if (fm.Delete(studentId, date)) {
+                    fm.deleteFeeFromFile("fees.json", studentId, date);
+                }
+                break;
+            }
+            case 3: {
+                int studentId = getValidatedInt("Enter Student ID: ");
+                while (!sm.exists(studentId)) {
+                    cout << "Student not found! Please enter a valid Student ID: ";
+                    studentId = getValidatedInt("");
+                }
+                string date = getValidatedDate("Enter Date (DD-MM-YYYY) to update: ");
+                int totalFee = getValidatedInt("Enter New Total Fee: ");
+                while (totalFee < 0) {
+                    cout << "Total fee cannot be negative. Please try again.\n";
+                    totalFee = getValidatedInt("Enter New Total Fee: ");
+                }
+                int paidFee = getValidatedInt("Enter New Paid Fee: ");
+                while (paidFee < 0 || paidFee > totalFee) {
+                    cout << "Paid fee cannot be negative or greater than total fee. Please try again.\n";
+                    continue;
+                }
+                int securityFee = getValidatedInt("Enter New Security Fee: ");
+                while (securityFee < 0) {
+                    cout << "Security fee cannot be negative. Please try again.\n";
+                    securityFee = getValidatedInt("Enter New Security Fee: ");
+                }
+
+                if (fm.Update(studentId, totalFee, paidFee, securityFee, date)) {
+                    fm.updateFeeInFile("fees.json", studentId, date);
+                }
+                break;
+            }
+            case 4: {
+                int studentId = getValidatedInt("Enter Student ID to search: ");
+                while (!sm.exists(studentId)) {
+                    cout << "Student not found! Please enter a valid Student ID: ";
+                    studentId = getValidatedInt("");
+                }
+                fm.Search(studentId);
+                break;
+            }
+            case 5: {
+                int studentId = getValidatedInt("Enter Student ID: ");
+                while (!sm.exists(studentId)) {
+                    cout << "Student not found! Please enter a valid Student ID: ";
+                    studentId = getValidatedInt("");
+                }
+                string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
+                fm.CheckDue(studentId, date);
+                break;
+            }
+            case 6:
+                fm.View();
+                break;
+            case 7:
+                cout << "Exiting Fee Management...\n";
+                break;
+            default:
+                cout << "Invalid choice. Try again.\n";
+        }
+    } while (choice != 7);
+
+    return 0;
+}
+
             case 3: {
                 int choice;
                 do {
@@ -283,6 +311,10 @@ int main() {
                         }
                         case 2: {
                             int id = getValidatedInt("Enter Student ID to delete attendance records: ");
+                            while (!sm.exists(id)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                id = getValidatedInt("");
+                            }
                             mam.DeleteByStudentId(id);
                             break;
                         }
@@ -291,6 +323,10 @@ int main() {
                             break;
                         case 4: {
                             int id = getValidatedInt("Enter Student ID to search attendance: ");
+                            while (!sm.exists(id)) {
+                                cout << "Student not found! Please enter a valid Student ID: ";
+                                id = getValidatedInt("");
+                            }
                             mam.Search(id);
                             break;
                         }

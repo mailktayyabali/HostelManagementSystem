@@ -3,9 +3,12 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "StudentManagement.h"
-
+#include "../Database/json.hpp"
 using namespace std;
+using json = nlohmann::json;
+
 
 struct AttendanceNode {
     int studentId;
@@ -15,6 +18,18 @@ struct AttendanceNode {
 
     AttendanceNode(int id, string d, string m)
         : studentId(id), date(d), mealType(m), next(nullptr) {}
+
+    json toJson() const {
+        return json{
+            {"studentId", studentId},
+            {"date", date},
+            {"mealType", mealType}
+        };
+    }
+
+    static AttendanceNode* fromJson(const json& j) {
+        return new AttendanceNode(j["studentId"], j["date"], j["mealType"]);
+    }
 };
 
 class MessAttendanceManagement {
@@ -29,9 +44,14 @@ public:
 
     void Enqueue(int studentId, string date, string mealType);
     void Dequeue();
-    void DeleteByStudentId(int studentId); 
+    void DeleteByStudentId(int studentId);
     void Search(int studentId);
     void ViewAll();
+
+    void saveToFile(const string& path);
+    void loadFromFile(const string& path);
+    void deleteFromFile(const string& path, int studentId);
+
 };
 
 #endif

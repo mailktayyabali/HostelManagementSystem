@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include "studentManagement.h"
-#include "../Database/json.hpp"  // JSON header
+#include "../Database/json.hpp"
 
 using namespace std;
 using json = nlohmann::json;
@@ -18,24 +18,23 @@ private:
         string date;
     };
 
-    unordered_map<int, FeeRecord> feeTable;
+    unordered_map<int, unordered_map<string, FeeRecord>> feeTable;
     StudentManagement* sm;
 
 public:
     FeeManagement(StudentManagement* sm);
 
     bool Add(int studentID, int totalFee, int paidFee, int securityFee, const string& date);
-    bool Delete(int studentID);
+    bool Delete(int studentID, const string& date);
     bool Update(int studentID, int totalFee, int paidFee, int securityFee, const string& date);
     bool Search(int studentID);
-    bool CheckDue(int studentID);
+    bool CheckDue(int studentID, const string& date);
     void View();
 
-    // JSON File Handling
     void saveFeesToFile(const string& path);
     void loadFeesFromFile(const string& path);
-    void updateFeeInFile(const string& path, int studentID);
-    void deleteFeeFromFile(const string& path, int studentID);
+    void updateFeeInFile(const string& path, int studentID, const string& date);
+    void deleteFeeFromFile(const string& path, int studentID, const string& date);
 };
 
 #endif
