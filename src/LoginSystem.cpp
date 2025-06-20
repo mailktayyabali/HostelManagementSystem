@@ -3,7 +3,25 @@
 #include <chrono>
 #include <thread>
 #include <cstdlib>
-#include <conio.h> // at top
+#include <conio.h> // For _getch() — password masking on Windows
+
+string getHiddenPassword() {
+    string password;
+    char ch;
+    while ((ch = _getch()) != '\r') { // '\r' is Enter
+        if (ch == '\b') { // Handle backspace
+            if (!password.empty()) {
+                cout << "\b \b";
+                password.pop_back();
+            }
+        } else if (isprint(ch)) {
+            password += ch;
+            cout << '*';
+        }
+    }
+    cout << endl;
+    return password;
+}
 
 bool LoginSystem::adminExists() {
     ifstream file(filename);
@@ -13,59 +31,84 @@ bool LoginSystem::adminExists() {
     try {
         file >> adminData;
     } catch (...) {
-        return false;  // JSON parsing failed
+        return false;  // JSON error or empty file
     }
 
-    // Check if both keys exist and are not empty
     return adminData.contains("username") && adminData.contains("password") &&
            !adminData["username"].get<string>().empty() &&
            !adminData["password"].get<string>().empty();
 }
 
-
 void LoginSystem::registerAdmin() {
     string username, password;
     cout << "\t\t================================\n";
-    cout << "\t\t||\tAdmin Registration    ";
-    cout<<"||\n";
+    cout << "\t\t||  Admin Registration        ||\n";
     cout << "\t\t================================\n";
-    cout << "Enter admin username: ";
-    cin.ignore(); // clear any leftover input
-    getline(cin, username);  // handles spaces
 
-    cout << "Enter admin password: ";
-    getline(cin, password);  // handles spaces
+    
+    // Username validation
+    do {
+        cout << "Enter admin username: ";
+        getline(cin, username);
+        cin.ignore(); // Clear buffer before input
+        if (username.empty()) {
+            cout << "Username cannot be empty.\n";
+        }
+    } while (username.empty());
+
+    // Password validation and masking
+    do {
+        cout << "Enter admin password (min 5 characters): ";
+        password = getHiddenPassword();
+
+        if (password.length() < 5) {
+            cout << "Password too short! Must be at least 5 characters.\n";
+        }
+    } while (password.length() < 5);
 
     json adminData;
     adminData["username"] = username;
     adminData["password"] = password;
 
     ofstream outFile(filename);
-    outFile << adminData.dump(4); // nicely formatted JSON
+    outFile << adminData.dump(4); // Pretty print JSON
     outFile.close();
 
     cout << "Admin registered successfully!\n";
     cout << "\t\t================================\n";
-    system("cls"); // clear screen after registration
+    system("cls");
 }
 
 bool LoginSystem::login() {
     if (!adminExists()) {
-        cout << " No admin registered.\n";
-
+        cout << "No admin registered.\n";
         return false;
     }
 
     string username, password;
-    cout <<"\t\t================================\n";
-    cout << "\t\t\t-- Admin Login --\n";
     cout << "\t\t================================\n";
-    cout << "\nEnter username: ";
-    cin.ignore(); // clear leftover newline
-    getline(cin, username);
+    cout << "\t\t        -- Admin Login --       \n";
+    cout << "\t\t================================\n";
 
-    cout << "\nEnter password: ";
-    getline(cin, password);
+    
+    // Username input
+    do {
+        cout << "Enter username: ";
+        getline(cin, username);
+        cin.ignore(); // Clear buffer before input
+        if (username.empty()) {
+            cout << "Username cannot be empty.\n";
+        }
+    } while (username.empty());
+
+    // Password input
+    do {
+        cout << "Enter password: ";
+        password = getHiddenPassword();
+        if (password.empty()) {
+            cout << "Password cannot be empty.\n";
+        }
+    } while (password.empty());
 
     return validateCredentials(username, password);
 }
@@ -82,11 +125,11 @@ bool LoginSystem::validateCredentials(const string& username, const string& pass
 
     if (adminData["username"] == username && adminData["password"] == password) {
         system("cls");
-        Animation::typeEffect("\n\t\tWelcomme to Hostel Management System", 30);
+        Animation::typeEffect("\n\t\tWelcome to Hostel Management System", 30);
         this_thread::sleep_for(chrono::milliseconds(1000));
         return true;
     } else {
-        cout << " Invalid credentials.\n";
+        cout << "Invalid credentials.\n";
         return false;
     }
 }
