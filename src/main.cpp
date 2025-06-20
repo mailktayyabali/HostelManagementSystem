@@ -118,9 +118,9 @@ int main() {
                                 cout << "Student not found! Please enter a valid Student ID: ";
                                 id = getValidatedInt("");
                             }
-                            if(sm.deleteStudent(id)) {
-                                sm.deleteStudentFromFile("students.json",id);
-                            }
+                            sm.deleteStudent(id) ; // Delete student from memory
+                            sm.deleteStudentFromFile("students.json",id);
+                            
                             break;
                         }
                         case 3: {
@@ -135,10 +135,10 @@ int main() {
                             updatedStudent->CNIC = getValidatedCNIC("Enter New CNIC: ");
                             updatedStudent->studentAddress = getValidatedString("Enter New Address: ");
                             updatedStudent->studentPhone = getValidatedPhone("Enter New Phone: ");
-                            if(sm.updateStudent(id, updatedStudent)){
+                            sm.updateStudent(id, updatedStudent);
                                 sm.updateStudentInFile("students.json",id, *updatedStudent );
                                 delete updatedStudent;
-                            }
+                            
                             break;
                         }
                         case 4:
@@ -154,8 +154,8 @@ int main() {
                 } while (choice != 5);
                 break;
             }
-case 2: {
-            int choice;
+            case 2: {
+    int choice;
     do {
         system("cls");
         cout << "\n-- Fee Management Menu --\n";
@@ -182,7 +182,7 @@ case 2: {
                 while (!sm.exists(studentId)) {
                     cout << "Student not found! Please enter a valid Student ID: ";
                     studentId = getValidatedInt("");
-                };
+                }
                 int totalFee = getValidatedInt("Enter Total Fee: ");
                 while (totalFee < 0) {
                     cout << "Total fee cannot be negative. Please try again.\n";
@@ -200,9 +200,8 @@ case 2: {
                 }
                 string date = getValidatedDate("Enter Date (DD-MM-YYYY): ");
 
-                if (fm.Add(studentId, totalFee, paidFee, securityFee, date)) {
-                    fm.saveFeesToFile("fees.json");
-                }
+                fm.Add(studentId, totalFee, paidFee, securityFee, date);
+                fm.saveFeesToFile("fees.json");
                 break;
             }
             case 2: {
@@ -233,7 +232,7 @@ case 2: {
                 int paidFee = getValidatedInt("Enter New Paid Fee: ");
                 while (paidFee < 0 || paidFee > totalFee) {
                     cout << "Paid fee cannot be negative or greater than total fee. Please try again.\n";
-                    continue;
+                    paidFee = getValidatedInt("Enter New Paid Fee: ");
                 }
                 int securityFee = getValidatedInt("Enter New Security Fee: ");
                 while (securityFee < 0) {
@@ -265,17 +264,20 @@ case 2: {
                 fm.CheckDue(studentId, date);
                 break;
             }
-            case 6:
+            case 6: {
                 fm.View();
                 break;
-            case 7:
+            }
+            case 7: {
                 cout << "Exiting Fee Management...\n";
                 break;
-            default:
+            }
+            default: {
                 cout << "Invalid choice. Try again.\n";
+            }
         }
     } while (choice != 7);
-        break;
+    break;
 }
             case 3: {
                 int choice;
