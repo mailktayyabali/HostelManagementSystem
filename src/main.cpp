@@ -6,6 +6,7 @@
 #include "VisitorManagement.h"
 #include "Validate.h"
 #include "LoginSystem.h"
+#include "Animation.h"
 #include <cstdlib>
 #include <chrono>
 #include <thread>
@@ -40,13 +41,13 @@ int main() {
     fm.loadFeesFromFile("fees.json"); // Load fees from file at startup
     vm.loadVisitorsFromFile("visitors.json"); // Load visitors from file at startup
     // mam.loadAttendanceFromFile("attendance.json");// Load attendance from file at startup
-    
+    Animation::splashScreen(); // Show splash screen animation
     do {        
         system("cls");
         cout << "=======================================================================\n";
-        cout << "                     HOSTEL MANAGEMENT SYSTEM\n";  
-        cout << "=======================================================================\n";
-        cout << "Welcome to the Hostel Management System!\n";
+        cout << "                     HOSTEL MANAGEMENT SYSTEM\n";
+        Animation::typeEffect(" Developed by: Tayyab Ali, Alishba Asif, Hashim Ahmed\n", 30);
+        cout << "=======================================================================\n\n";
         
         cout << "1. Student Management\n";
         cout << "2. Fee Management\n";
@@ -59,7 +60,8 @@ int main() {
 
         if (cin.fail()) {
             cin.clear();
-            cout << "Invalid input! Try again.\n";
+            cin.ignore(1000, '\n');
+            Animation::blinkingMessage("Invalid input! Please enter a number between 1 and 6.", 3);
             continue;
         }
 
@@ -67,6 +69,7 @@ int main() {
             case 1: {
                 int choice;
                 do {
+                    system("cls");
                     cout << "\n--- Student Management Menu ---\n";
                     cout << "1. Add Student\n";
                     cout << "2. Delete Student\n";
@@ -80,7 +83,7 @@ int main() {
                         cin.clear();
                         cin.ignore(1000, '\n');
                         cout << "Invalid input! Try again.\n";
-                        
+                        this_thread::sleep_for(chrono::milliseconds(1000));
                         continue;
                     }
 
@@ -115,8 +118,9 @@ int main() {
                                 cout << "Student not found! Please enter a valid Student ID: ";
                                 id = getValidatedInt("");
                             }
-                            sm.deleteStudent(id);
-                            sm.deleteStudentFromFile("students.json",id);
+                            if(sm.deleteStudent(id)) {
+                                sm.deleteStudentFromFile("students.json",id);
+                            }
                             break;
                         }
                         case 3: {
@@ -131,9 +135,10 @@ int main() {
                             updatedStudent->CNIC = getValidatedCNIC("Enter New CNIC: ");
                             updatedStudent->studentAddress = getValidatedString("Enter New Address: ");
                             updatedStudent->studentPhone = getValidatedPhone("Enter New Phone: ");
-                            sm.updateStudent(id, updatedStudent);
-                            sm.updateStudentInFile("students.json",id, *updatedStudent );
-                            delete updatedStudent;
+                            if(sm.updateStudent(id, updatedStudent)){
+                                sm.updateStudentInFile("students.json",id, *updatedStudent );
+                                delete updatedStudent;
+                            }
                             break;
                         }
                         case 4:
@@ -141,10 +146,10 @@ int main() {
                             sm.viewStudents();
                             break;
                         case 5:
-                            cout << "Returning to main menu...\n";
+                            Animation::typeEffect("Returning to main menu...\n", 30);
                             break;
                         default:
-                            cout << "Invalid option! Please try again.\n";
+                            Animation::blinkingMessage("Invalid option! Please try again.", 3);
                     }
                 } while (choice != 5);
                 break;
@@ -152,6 +157,7 @@ int main() {
 case 2: {
             int choice;
     do {
+        system("cls");
         cout << "\n-- Fee Management Menu --\n";
         cout << "1. Add Fee Record\n";
         cout << "2. Delete Fee Record\n";

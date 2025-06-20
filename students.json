@@ -1,6 +1,13 @@
 [
     {
         "CNIC": "12345-1234567-1",
+        "studentAddress": "kvfdf",
+        "studentId": 101,
+        "studentName": "tayyab",
+        "studentPhone": "03212345678"
+    },
+    {
+        "CNIC": "12345-1234567-1",
         "studentAddress": "gyhb fgb",
         "studentId": 100,
         "studentName": "ali",

@@ -1,4 +1,7 @@
 #include "LoginSystem.h"
+#include <chrono>
+#include <thread>
+#include <cstdlib>
 
 bool LoginSystem::adminExists() {
     ifstream file(filename);
@@ -40,11 +43,14 @@ void LoginSystem::registerAdmin() {
     outFile.close();
 
     cout << "Admin registered successfully!\n";
+    system("cls"); // clear screen after registration
+    cout << "\t\t================================\n";
 }
 
 bool LoginSystem::login() {
     if (!adminExists()) {
         cout << " No admin registered.\n";
+
         return false;
     }
 
@@ -73,7 +79,8 @@ bool LoginSystem::validateCredentials(const string& username, const string& pass
     inFile >> adminData;
 
     if (adminData["username"] == username && adminData["password"] == password) {
-        cout << " Login successful. Welcome, Admin!\n";
+        cout << "\nWelcome to the Hostel Management System\n";
+        this_thread::sleep_for(chrono::milliseconds(1000));
         return true;
     } else {
         cout << " Invalid credentials.\n";

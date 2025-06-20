@@ -1,5 +1,8 @@
 #include "StudentManagement.h"
+#include "Animation.h"
 #include <fstream>
+#include <chrono>
+#include <thread>
 #include <iomanip>
 #include <cstdlib>  // system("cls")
 
@@ -12,9 +15,9 @@ void StudentManagement::addStudent(Student* student) {
         return;
     }
     students[student->studentId] = student;
-    cout << "Student added successfully!" << endl;
-
-    system("cls"); 
+    Animation::typeEffect("Student added successfully!\n", 30);
+   this_thread::sleep_for(chrono::milliseconds(500));
+    system("cls");
 }
 
 // Delete student
@@ -23,7 +26,9 @@ void StudentManagement::deleteStudent(int studentId) {
     if (it != students.end()) {
         delete it->second;
         students.erase(it);
-        cout << "Student deleted successfully!" << endl;
+        Animation::typeEffect("Student deleted successfully!\n", 30);
+        this_thread::sleep_for(chrono::milliseconds(500));
+        system("cls");
     } else {
         cout << "Student not found!" << endl;
     }
@@ -108,7 +113,7 @@ void StudentManagement::loadStudentsFromFile(const string& filename) {
 void StudentManagement::updateStudentInFile(const string& filename, int studentId, const Student& updatedStudent) {
     ifstream inFile(filename);
     if (!inFile.is_open()) {
-        cout << "⚠️ Could not open file for updating!" << endl;
+        cout << " Could not open file for updating!" << endl;
         return;
     }
 
@@ -129,16 +134,16 @@ void StudentManagement::updateStudentInFile(const string& filename, int studentI
         ofstream outFile(filename);
         outFile << jArray.dump(4);
         outFile.close();
-        cout << "✅ Student updated in file successfully!" << endl;
+        cout << "Student updated in file successfully!" << endl;
     } else {
-        cout << "❌ Student ID not found in file." << endl;
+        cout << "Student ID not found in file." << endl;
     }
 }
 // Delete student from file
 void StudentManagement::deleteStudentFromFile(const string& filename, int studentId) {
     ifstream inFile(filename);
     if (!inFile.is_open()) {
-        cout << "⚠️ Could not open file for deletion!" << endl;
+        cout << "Could not open file for deletion!" << endl;
         return;
     }
 
@@ -159,8 +164,8 @@ void StudentManagement::deleteStudentFromFile(const string& filename, int studen
         ofstream outFile(filename);
         outFile << jArray.dump(4);
         outFile.close();
-        cout << "✅ Student deleted from file successfully!" << endl;
+        cout << " Student deleted from file successfully!" << endl;
     } else {
-        cout << "❌ Student ID not found in file." << endl;
+        cout << " Student ID not found in file." << endl;
     }
 }
