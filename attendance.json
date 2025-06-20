@@ -3,10 +3,5 @@
         "date": "06-07-2006",
         "mealType": "break",
         "studentId": 100
-    },
-    {
-        "date": "06-07-2006",
-        "mealType": "dinner",
-        "studentId": 100
     }
 ]

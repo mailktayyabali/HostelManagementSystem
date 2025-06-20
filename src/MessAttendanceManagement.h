@@ -52,6 +52,8 @@ public:
     void saveToFile(const string& path);
     void loadFromFile(const string& path);
     void deleteFromFile(const string& path, int studentId);
+    void deleteFromFile(const string& path, int studentId, const string& date, const string& mealType);
+
 
 };
 

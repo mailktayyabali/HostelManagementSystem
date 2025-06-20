@@ -234,7 +234,7 @@ void MessAttendanceManagement::deleteFromFile(const string& path, int studentId)
     }
 
     if (!found) {
-        cout << "❌ No records found for Student ID " << studentId << " in file.\n";
+        cout << "No records found for Student ID " << studentId << " in file.\n";
         return;
     }
 
@@ -245,5 +245,43 @@ void MessAttendanceManagement::deleteFromFile(const string& path, int studentId)
         cout << "Records for Student ID " << studentId << " deleted from file.\n";
     } else {
         cout << "Failed to write updated records to file.\n";
+    }
+}
+void MessAttendanceManagement::deleteFromFile(const string& path, int studentId, const string& date, const string& mealType) {
+    ifstream in(path);
+    if (!in.is_open()) {
+        cout << " Could not open file: " << path << endl;
+        return;
+    }
+
+    json jArray;
+    in >> jArray;
+    in.close();
+
+    bool deleted = false;
+    json updatedArray = json::array();
+
+    for (const auto& entry : jArray) {
+        if (entry["studentId"] == studentId &&
+            entry["date"] == date &&
+            entry["mealType"] == mealType) {
+            deleted = true;
+        } else {
+            updatedArray.push_back(entry);
+        }
+    }
+
+    if (!deleted) {
+        cout << " No matching record found for deletion in file.\n";
+        return;
+    }
+
+    ofstream out(path);
+    if (out.is_open()) {
+        out << updatedArray.dump(4);
+        out.close();
+        cout << " Record deleted for Student ID " << studentId << " on " << date << " (" << mealType << ").\n";
+    } else {
+        cout << " Failed to write updated records to file.\n";
     }
 }

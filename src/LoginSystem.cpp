@@ -1,7 +1,9 @@
 #include "LoginSystem.h"
+#include "Animation.h"
 #include <chrono>
 #include <thread>
 #include <cstdlib>
+#include <conio.h> // at top
 
 bool LoginSystem::adminExists() {
     ifstream file(filename);
@@ -43,8 +45,8 @@ void LoginSystem::registerAdmin() {
     outFile.close();
 
     cout << "Admin registered successfully!\n";
-    system("cls"); // clear screen after registration
     cout << "\t\t================================\n";
+    system("cls"); // clear screen after registration
 }
 
 bool LoginSystem::login() {
@@ -79,7 +81,8 @@ bool LoginSystem::validateCredentials(const string& username, const string& pass
     inFile >> adminData;
 
     if (adminData["username"] == username && adminData["password"] == password) {
-        cout << "\nWelcome to the Hostel Management System\n";
+        system("cls");
+        Animation::typeEffect("\n\t\tWelcomme to Hostel Management System", 30);
         this_thread::sleep_for(chrono::milliseconds(1000));
         return true;
     } else {

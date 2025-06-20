@@ -128,7 +128,9 @@ void RoomManagement::viewRooms() {
         return;
     }
 
-    cout << "--- Rooms (Sorted by Least Occupied) ---" << endl;
+    cout << "======================================================" << endl;
+    cout << "                      Room List" << endl;
+    cout << "======================================================" << endl;
     RoomMinHeap tempHeap = roomHeap;
 
     while (!tempHeap.empty()) {
@@ -137,13 +139,13 @@ void RoomManagement::viewRooms() {
         tempHeap.getHeap().pop_back();
         tempHeap.rebuild();
 
-        cout << "Room ID:   |" << room->roomId << endl;
-        cout << "Type:      |" << room->roomType << endl;
-        cout << "Capacity:  |" << room->capacity << endl;
-        cout << "Occupied:  |" << room->occupants.size() << "/" << room->capacity << endl;
-        cout << "Occupants: |";
+        cout << "Room ID:   | " << room->roomId << endl;
+        cout << "Type:      | " << room->roomType << endl;
+        cout << "Capacity:  | " << room->capacity << endl;
+        cout << "Occupied:  | " << room->occupants.size() << "/" << room->capacity << endl;
+        cout << "Occupants: | ";
         for (int id : room->occupants) cout << id << " ";
-        cout << endl << "------------------------" << endl;
+        cout << "======================================================" << endl;
     }
 }
 

@@ -40,22 +40,23 @@ int main() {
     sm.loadStudentsFromFile("students.json"); // Load students from file at startup
     fm.loadFeesFromFile("fees.json"); // Load fees from file at startup
     vm.loadVisitorsFromFile("visitors.json"); // Load visitors from file at startup
-    // mam.loadAttendanceFromFile("attendance.json");// Load attendance from file at startup
+    mam.loadFromFile("attendance.json"); // Load attendance from file at startup
     Animation::splashScreen(); // Show splash screen animation
     do {        
         system("cls");
         cout << "=======================================================================\n";
         cout << "                     HOSTEL MANAGEMENT SYSTEM\n";
         Animation::typeEffect(" Developed by: Tayyab Ali, Alishba Asif, Hashim Ahmed\n", 30);
+        cout << "=======================================================================\n";
+        cout<< "\t  |\n";
+        cout << "\t1 | Student Management\n";
+        cout << "\t2 | Fee Management\n";
+        cout << "\t3 | Mess Attendance Management\n";
+        cout << "\t4 | Room Management\n";
+        cout << "\t5 | Visitor Management\n";
+        cout << "\t6 | Exit\n";
         cout << "=======================================================================\n\n";
-        
-        cout << "1. Student Management\n";
-        cout << "2. Fee Management\n";
-        cout << "3. Mess Attendance Management\n";
-        cout << "4. Room Management\n";
-        cout << "5. Visitor Management\n";
-        cout << "6. Exit\n";
-        cout << "Enter your choice: ";
+        cout << "\tEnter your choice: ";
         cin >> mainChoice;
 
         if (cin.fail()) {
@@ -69,7 +70,7 @@ int main() {
             case 1: {
                 int choice;
                 do {
-                    system("cls");
+                    
                     cout << "\n--- Student Management Menu ---\n";
                     cout << "1. Add Student\n";
                     cout << "2. Delete Student\n";
@@ -142,7 +143,7 @@ int main() {
                             break;
                         }
                         case 4:
-                            sm.loadStudentsFromFile("students.json"); // Load students from file before viewing
+                           
                             sm.viewStudents();
                             break;
                         case 5:
@@ -317,6 +318,7 @@ int main() {
                                 }
                             }
                             mam.Enqueue(studentId, date, meal);
+                            mam.saveToFile("attendance.json"); // Save attendance to file after adding
                             break;
                         }
                         case 2: {
@@ -340,6 +342,7 @@ int main() {
                                     id = getValidatedInt("");
                                 }
                                 mam.DeleteByStudentId(id);
+                                mam.deleteFromFile("attendance.json", id); // Delete from file
                             } else if (subChoice == 2) {
                                 int id = getValidatedInt("Enter Student ID: ");
                                 while (!sm.exists(id)) {
@@ -354,6 +357,7 @@ int main() {
                                     cout << "Invalid meal type! Use breakfast/lunch/dinner.\n";
                                 }
                                 mam.DeleteByDateAndMeal(id, date, meal);
+                                mam.deleteFromFile("attendance.json", id, date, meal); // Delete from file
                             } else {
                                 cout << "Invalid deletion option!\n";
                             }
@@ -543,7 +547,7 @@ int main() {
                 break;
 
             default:
-                cout << "Invalid main menu choice. Try again.\n";
+               Animation::blinkingMessage("Invalid choice! Please enter a number between 1 and 6.", 3);
                
         }
 

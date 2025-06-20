@@ -1,10 +1,10 @@
 [
     {
         "CNIC": "12345-1234567-1",
-        "studentAddress": "kvfdf",
-        "studentId": 101,
-        "studentName": "tayyab",
-        "studentPhone": "03212345678"
+        "studentAddress": "sdsdgdghfgkj",
+        "studentId": 102,
+        "studentName": "Tayyab",
+        "studentPhone": "03234232345"
     },
     {
         "CNIC": "12345-1234567-1",
@@ -12,5 +12,12 @@
         "studentId": 100,
         "studentName": "ali",
         "studentPhone": "03104242619"
+    },
+    {
+        "CNIC": "12345-1234567-1",
+        "studentAddress": "kvfdf",
+        "studentId": 101,
+        "studentName": "tayyab",
+        "studentPhone": "03212345678"
     }
 ]
