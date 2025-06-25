@@ -1,10 +1,17 @@
 [
     {
         "CNIC": "12345-1234567-1",
-        "studentAddress": "sdsdgdghfgkj",
-        "studentId": 102,
+        "studentAddress": "wedwe23523wcfqc@",
+        "studentId": 105,
         "studentName": "Tayyab",
-        "studentPhone": "03234232345"
+        "studentPhone": "03123456789"
+    },
+    {
+        "CNIC": "12345-1234567-1",
+        "studentAddress": "kvfdf",
+        "studentId": 101,
+        "studentName": "tayyab",
+        "studentPhone": "03212345678"
     },
     {
         "CNIC": "12345-1234567-1",
@@ -15,9 +22,9 @@
     },
     {
         "CNIC": "12345-1234567-1",
-        "studentAddress": "kvfdf",
-        "studentId": 101,
-        "studentName": "tayyab",
-        "studentPhone": "03212345678"
+        "studentAddress": "sdsdgdghfgkj",
+        "studentId": 102,
+        "studentName": "Tayyab",
+        "studentPhone": "03234232345"
     }
 ]

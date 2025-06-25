@@ -107,7 +107,8 @@ int main() {
                             }
                             newStudent->studentName = getValidatedString("Enter Name: ");
                             newStudent->CNIC = getValidatedCNIC("Enter CNIC (e.g., 12345-1234567-1): ");
-                            newStudent->studentAddress = getValidatedString("Enter Address: ");
+                            cout << "Enter Address: ";
+                            getline(cin >> ws, newStudent->studentAddress);
                             newStudent->studentPhone = getValidatedPhone("Enter Phone: ");
                             sm.addStudent(newStudent);
                             sm.saveStudentsToFile("students.json");
